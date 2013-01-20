@@ -284,7 +284,7 @@ public class Mutenizer extends JavaPlugin
 	public void instaBanPlayer(Player player)
 	{
 		String uName = player.getName();
-		String banCom = getConfig().getString("InstaBanCommand");
+		String banCom = getConfig().getString("BanCommands.InstaBan");
 		String comSplit[] = banCom.split(" ", 3);
 		if(comSplit.length == 1)
 		{
@@ -308,7 +308,7 @@ public class Mutenizer extends JavaPlugin
 	public void capsBunnyRabbit(Player player)
 	{
 		String uName = player.getName();
-		String banCom = getConfig().getString("BanCommand");
+		String banCom = getConfig().getString("BanCommands.CapsBan");
 		String comSplit[] = banCom.split(" ", 3);
 		if(comSplit.length == 1)
 		{
@@ -369,7 +369,7 @@ public class Mutenizer extends JavaPlugin
 	public void bunnyRabbit(Player player)
 	{
 		String uName = player.getName();
-		String banCom = getConfig().getString("BanCommand");
+		String banCom = getConfig().getString("BanCommands.Ban");
 		String comSplit[] = banCom.split(" ", 3);
 		if(comSplit.length == 1)
 		{

@@ -35,7 +35,9 @@ Message:
     Warn: You have used too many capitals!
     Kick: You were kicked for using too many capitals!
     Ban: You were banned for spamming capitals!
-BanCommand: ban
-InstaBanCommand: ban
+BanCommands:
+  Ban: ban
+  InstaBan: ban 
+  CapsBan: ban
 Warnings:
   Warned:

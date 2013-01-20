@@ -1,10 +1,4 @@
-Blacklist:
-#Blacklisted words go here.
-#Formatting is on the forums, or search up java regex
-Whitelist:
-#Whitelisted words go here. Formatting is the same as blacklisted words. These words are the top. They are allowed no matter what.
-InstaBanList:
-#Words resulting in an instant ban go here. These words do not take precedence over the whitelist.
+#ALL WORDS ARE IN THEIR RESPECTIVE .YML FILES
 commandsList:
 #Commands here are listened to for swearing.
 #Command can only be one word.
@@ -37,11 +31,11 @@ ResetWarningsOnBan: true
 #Determines if caps are censored, result in punishment, and what percentage of capitals are allowed in any one message
 Caps:
   Percentage: 50
-  #If caps are censored
+  #If true, then caps filter will be enabled
   Enabled: true
-  #If caps result in punishment
+  #If true caps result in punishment
   Enforced: true
-#Messages for each scenario
+#Messages for different scenarios
 Message:
   FirstJoin: You have been given the default number of warnings!
   Swear:  
@@ -49,16 +43,15 @@ Message:
     Kick: You have been kicked for swearing!
     Ban: You have been banned for repeated swearing!
   InstaBan: You have been instantly banned for using a word on the instant ban list!
-  CapsM:
+  Caps:
     Warn: You have used too many capitals!
     Kick: You were kicked for using too many capitals!
     Ban: You were banned for spamming capitals!
 #Command to be executed when a player is banned. If you are using a tempban command just put it as "<command> <time>" It won't matter if time is set as '10d' or '10 d' as long as it suits your banning plugin
-BanCommand: ban
-#Command to be executed when a player uses an instant ban word. Same rules apply as the regular command
-InstaBanCommand: ban
+BanCommands:
+ Ban: ban
+ InstaBan: ban
+ CapsBan: ban
 #List of users warnings
 Warnings:
   Warned:
-#List of users(please do not touch as this is part of the /mutenizer resetall command. If you would like to remove someone from that command then remove their name from this list.
-UserList:
