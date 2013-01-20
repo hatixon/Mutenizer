@@ -2,6 +2,7 @@ package com.github.hatixon.mutenizer;
 
 import java.util.*;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
@@ -102,7 +103,7 @@ public class ServerCommandExecutor implements CommandExecutor
 	            		
 	            		if(!args[1].equalsIgnoreCase("list") && !args[1].equalsIgnoreCase("add") && !args[1].equalsIgnoreCase("delete")&& !args[1].equalsIgnoreCase("help"))
 	            		{
-	            			ccs.sendMessage(new StringBuilder().append(RED).append(" ").append(args[1]).append(" is not a valid parameter /mutenizer whitelist help").toString());
+	            			ccs.sendMessage(new StringBuilder(pre).append(" '").append(args[1]).append("' is not a valid parameter /mutenizer whitelist help").toString());
 	            			return true;
 	            		}
 	            		
@@ -201,7 +202,7 @@ public class ServerCommandExecutor implements CommandExecutor
 						
 						if(!args[1].equalsIgnoreCase("list") && !args[1].equalsIgnoreCase("add") && !args[1].equalsIgnoreCase("delete") && !args[1].equalsIgnoreCase("help"))
 						{
-							ccs.sendMessage(new StringBuilder().append(RED).append(" ").append(args[1]).append(" is not a valid parameter /mutenizer blacklist help").toString());			            		
+							ccs.sendMessage(new StringBuilder(pre).append(" '").append(args[1]).append("' is not a valid parameter /mutenizer blacklist help").toString());			            		
 							return true;
 						}		            			
 
@@ -345,7 +346,11 @@ public class ServerCommandExecutor implements CommandExecutor
 	        		}
 	            	if(param.equalsIgnoreCase("info"))
 	            	{
-	            		ccs.sendMessage(new StringBuilder(pre).append("\nVersion: 2.1\nAuthor: Hatixon\n").toString());
+	            		ccs.sendMessage(new StringBuilder(pre).append("\nVersion: ").append(Bukkit.getServer().getPluginManager().getPlugin("Mutenizer").getDescription().getVersion()).append("\nAuthor: Hatixon\n").toString());
+	            		if(plugin.isUpdated())
+	            		{
+	            			ccs.sendMessage(new StringBuilder(pre).append(" New version is available").toString());
+	            		}
 	            		return true;
 	            	}
 		            if(param.equalsIgnoreCase("instaban"))
@@ -358,7 +363,7 @@ public class ServerCommandExecutor implements CommandExecutor
 	            		
 	            		if(!args[1].equalsIgnoreCase("list") && !args[1].equalsIgnoreCase("add") && !args[1].equalsIgnoreCase("delete")&& !args[1].equalsIgnoreCase("help"))
 	            		{
-	            			ccs.sendMessage(new StringBuilder().append(RED).append(" ").append(args[1]).append(" is not a valid parameter /mutenizer instaban help").toString());
+	            			ccs.sendMessage(new StringBuilder(pre).append(" '").append(args[1]).append("' is not a valid parameter /mutenizer instaban help").toString());
 	            			return true;
 	            		}
 	            		
@@ -491,7 +496,7 @@ public class ServerCommandExecutor implements CommandExecutor
 			            		
 			            		if(!args[1].equalsIgnoreCase("list") && !args[1].equalsIgnoreCase("add") && !args[1].equalsIgnoreCase("delete")&& !args[1].equalsIgnoreCase("help"))
 			            		{
-			            			p.sendMessage(new StringBuilder().append(RED).append(" ").append(args[1]).append(" is not a valid parameter /mutenizer whitelist help").toString());
+			            			p.sendMessage(new StringBuilder(pre).append(" '").append(args[1]).append("' is not a valid parameter /mutenizer whitelist help").toString());
 			            			return true;
 			            		}
 			            		
@@ -612,7 +617,7 @@ public class ServerCommandExecutor implements CommandExecutor
 			            		
 			            		if(!args[1].equalsIgnoreCase("list") && !args[1].equalsIgnoreCase("add") && !args[1].equalsIgnoreCase("delete") && !args[1].equalsIgnoreCase("help"))
 			            		{
-			            			p.sendMessage(new StringBuilder().append(RED).append(" ").append(args[1]).append(" is not a valid parameter /mutenizer blacklist help").toString());			            		
+			            			p.sendMessage(new StringBuilder(pre).append(" '").append(args[1]).append("' is not a valid parameter /mutenizer blacklist help").toString());			            		
 			            			return true;
 			            		}		            			
 
@@ -843,7 +848,15 @@ public class ServerCommandExecutor implements CommandExecutor
 		        		}
 		            	if(param.equalsIgnoreCase("info"))
 		            	{
-		            		p.sendMessage(new StringBuilder(pre).append("\nVersion: 2.1\nAuthor: Hatixon\n").toString());
+		            		p.sendMessage(new StringBuilder(pre).append("\nVersion: ").append(Bukkit.getServer().getPluginManager().getPlugin("Mutenizer").getDescription().getVersion()).append("\nAuthor: Hatixon\n").toString());
+		            		if(plugin.isUpdated())
+		            		{
+		            			if(p.isOp())
+		            			{
+		            				p.sendMessage(new StringBuilder(pre).append(" New version is available").toString());
+		            			}
+		            			
+		            		}
 		            		return true;
 		            	}
 			            if(param.equalsIgnoreCase("instaban"))

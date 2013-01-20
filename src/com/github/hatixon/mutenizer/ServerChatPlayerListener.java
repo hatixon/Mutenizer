@@ -231,5 +231,12 @@ public class ServerChatPlayerListener extends JavaPlugin implements Listener
     	{
     		plugin.addUserL(uName.toLowerCase());
     	}
+    	if(p.isOp())
+    	{
+    		if(plugin.isUpdated())
+    		{
+    			p.sendMessage(new StringBuilder(pre).append(" There is an updated version of Mutenizer").toString());
+    		}
+    	}
     }
 }

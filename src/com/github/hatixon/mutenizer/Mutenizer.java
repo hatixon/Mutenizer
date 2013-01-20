@@ -1,6 +1,8 @@
 package com.github.hatixon.mutenizer;
 
 import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.*;
 import java.util.logging.*;
 import java.util.regex.Matcher;
@@ -26,16 +28,12 @@ public class Mutenizer extends JavaPlugin
 	public final CapsCheck playerCapsCheck = new CapsCheck(this);
 	public final CommandListener commandCheck = new CommandListener(this);
 	public final SignPlaceListener signPlace = new SignPlaceListener(this);
-	
 	private FileConfiguration usersConfig = null;
 	private File usersConfigFile = null;
-	
 	private FileConfiguration whiteConfig = null;
 	private File whiteFile = null;
-	
 	private FileConfiguration blackConfig = null;
 	private File blackFile = null;
-	
 	private FileConfiguration instantConfig = null;
 	private File instantFile = null;
 	
@@ -176,8 +174,10 @@ public class Mutenizer extends JavaPlugin
         }
         try {
             getWhiteConfig().save(whiteFile);
-        } catch (IOException ex) {
-            this.getLogger().log(Level.SEVERE, "Could not save config to " + whiteFile, ex);        }
+        } catch (IOException ex) 
+        {
+            this.getLogger().log(Level.SEVERE, "Could not save config to " + whiteFile, ex);        
+        }
     }
     
 	
@@ -273,8 +273,46 @@ public class Mutenizer extends JavaPlugin
 		getInstaBan();
 		getUserList();
 		getApetureSymbol();
-		moveFileFromJar("readme.txt", "plugins/Mutenizer/readmev2.1.1.txt", Boolean.valueOf(true));
+		if(isUpdated() == true)
+		{
+			logger.info(new StringBuilder(pre).append("There is an updated version of Mutenizer").toString());
+		}
 	}
+	
+    public String getLatest()
+    {
+        StringBuilder responseData = new StringBuilder();
+    	try
+    	{
+        String uri = "http://pastebin.com/raw.php?i=Tsaqvs1s";
+        URL url = new URL(uri);
+        HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+        conn.setRequestMethod("GET");
+        BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+        String line = null;
+        while((line = in.readLine()) != null) 
+        {
+            responseData.append(line);
+        }
+    	}catch(Exception e)
+    	{
+    		
+    	}
+        return responseData.toString();
+    }
+    
+    public boolean isUpdated()
+    {
+    	PluginDescriptionFile pdffile = getDescription();
+    	String current = pdffile.getVersion();
+    	String latest = getLatest();
+    	boolean updated = false;
+    	if(!current.equalsIgnoreCase(latest))
+    	{
+    		updated = true;
+    	}
+    	return updated;
+    }
 	
 	public String getMessageInstaBan()
 	{
@@ -327,39 +365,6 @@ public class Mutenizer extends JavaPlugin
 	{
 		return getConfig().getString("Message.Caps.Warn");
 	}
-	
-    public void moveFileFromJar(String jarFileName, String targetLocation, Boolean overwrite)
-    {
-		String pre = (new StringBuilder().append("[Mutenizer]")).toString();
-        try
-        {
-            File targetFile = new File(targetLocation);
-            if(overwrite.booleanValue() || targetFile.length() == 0L)
-            {
-                InputStream inFile = getClass().getClassLoader().getResourceAsStream(jarFileName);
-                FileWriter outFile = new FileWriter(targetFile);
-                int c;
-                while((c = inFile.read()) != -1) 
-                {
-                    outFile.write(c);
-                }
-                inFile.close();
-                outFile.close();
-            }
-        }
-        catch(NullPointerException e)
-        {
-            logger.info(new StringBuilder("Failed to create ").append(jarFileName).append(".").toString());
-        }
-        catch(ZipException e)
-        {
-        	logger.info(new StringBuilder(pre).append(" Failed to create README.txt. Please delete the current one in /plugins/Mutenizer/ to remove this error!").toString());
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-        }
-    }
     
     public boolean getCapsPunishment()
     {
