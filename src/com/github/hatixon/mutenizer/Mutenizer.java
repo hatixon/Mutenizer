@@ -1,4 +1,14 @@
 package com.github.hatixon.mutenizer;
+//    /\    /\
+//   /  \  /  \
+//  /    \/    \
+//  \          /
+//   \        /
+//    \      /
+//     \    /
+//      \  /
+//       \/
+// Was told to add love to my plugin. So there you have it.
 
 import java.io.*;
 import java.net.HttpURLConnection;
