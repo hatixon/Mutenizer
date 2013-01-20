@@ -1,0 +1,51 @@
+name: Mutenizer
+main: com.github.hatixon.mutenizer.Mutenizer
+version: 2.1.2
+
+commands:
+
+  mutenizer:
+    description: Enables in-game access to the Mutenizer plugin
+    usage: /mutenizer help
+    permission: mutenizer
+
+permissions:
+
+  mutenizer:
+    default: op
+
+  mutenizer.list:
+    default: op
+
+  mutenizer.edit:
+    default: op
+  
+  mutenizer.reset:
+    default: op
+
+  mutenizer.warnings:
+    default: op
+    
+  mutenizer.warnings.others:
+    default: op
+  
+  mutenizer.bypass.swear:
+    default: op
+      
+  mutenizer.bypass.caps:
+    default: op
+      
+  mutenizer.bypass.ban:
+    default: op
+  
+  mutenizer.bypass.money:
+    default: op
+  
+  mutenizer.bypass.fcuk:
+    default: op
+  
+  mutenizer.bypass.commandcheck:
+    default: op
+  
+  mutenizer.bypass.signcheck:
+    default: op
