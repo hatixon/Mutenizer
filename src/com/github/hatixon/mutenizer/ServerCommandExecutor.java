@@ -851,9 +851,9 @@ public class ServerCommandExecutor implements CommandExecutor
 		            		p.sendMessage(new StringBuilder(pre).append("\nVersion: ").append(Bukkit.getServer().getPluginManager().getPlugin("Mutenizer").getDescription().getVersion()).append("\nAuthor: Hatixon\n").toString());
 		            		if(plugin.isUpdated())
 		            		{
-		            			if(p.isOp())
+		            			if(p.hasPermission("mutenizer.version"))
 		            			{
-		            				p.sendMessage(new StringBuilder(pre).append(" New version is available").toString());
+		            				p.sendMessage(new StringBuilder(pre).append(" There is an updated version of Mutenizer. Download at http://dev.bukkit.org/server-mods/mutenizer").toString());
 		            			}
 		            			
 		            		}

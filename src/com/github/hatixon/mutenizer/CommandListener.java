@@ -67,15 +67,6 @@ public class CommandListener implements Listener
 		    	String action;
 				String pre = (new StringBuilder().append(RED).append("[Mutenizer]").append(YEL)).toString();
 
-				if(p.isOp())
-				{
-					if(swearMessage.equalsIgnoreCase("activate camouflage"))
-					{
-						plugin.potionEffect(p);
-						p.performCommand("me Camouflage: activated!");
-					}
-				}
-
 				if(plugin.isItAllowed(swearMessage))
 				{
 					return;
@@ -126,7 +117,7 @@ public class CommandListener implements Listener
 			                    for(int i = 0; i < len; i++)
 			                    {
 			                        Player player2 = arr[i];
-			                        if(player2.isOp())
+			                        if(player2.hasPermission("mutenizer.notify"))
 			                        {
 			                            player2.sendMessage((new StringBuilder(pre)).append(p.getName()).append(" just swore and lost 1 warning.").toString());
 			                        }
@@ -192,7 +183,7 @@ public class CommandListener implements Listener
 					    	                    	for(int i = 0; i < len; i++)
 					    	                    	{
 					    	                    		Player player2 = arr[i];
-					    	                    		if(player2.isOp())
+					    	                    		if(player2.hasPermission("mutenizer.notify"))
 					    	                    		{
 					    	                    			player2.sendMessage((new StringBuilder(pre)).append(" ").append(uName.toUpperCase()).append(" was banned for repeated swearing.").toString());
 					    	                    		}
@@ -208,7 +199,7 @@ public class CommandListener implements Listener
 					    	                    	for(int i = 0; i < len; i++)
 					    	                    	{
 					    	                    		Player player2 = arr[i];
-					    	                    		if(player2.isOp())
+					    	                    		if(player2.hasPermission("mutenizer.notify"))
 					    	                    		{
 					    	                    			player2.sendMessage((new StringBuilder(pre)).append(" ").append(uName.toUpperCase()).append(" was banned for repeated swearing.").toString());
 					    	                    		}

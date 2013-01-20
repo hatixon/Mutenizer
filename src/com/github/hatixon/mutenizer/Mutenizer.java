@@ -318,9 +318,9 @@ public class Mutenizer extends JavaPlugin
 		getInstaBan();
 		getUserList();
 		getApetureSymbol();
-		if(isUpdated() == true)
+		if(isUpdated())
 		{
-			logger.info(new StringBuilder(pre).append("There is an updated version of Mutenizer").toString());
+			logger.info(new StringBuilder(pre).append("There is an updated version of Mutenizer. Download at http://dev.bukkit.org/server-mods/mutenizer").toString());
 		}
 	}
 	

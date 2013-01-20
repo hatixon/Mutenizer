@@ -24,6 +24,10 @@ public class CapsCheck implements Listener
 		{
 			return;
 		}
+		if(e.getMessage().equalsIgnoreCase("XD"))
+		{
+			return;
+		}
 		String message = e.getMessage();
 		Player p = e.getPlayer();
 		int capsCount = 0;
@@ -65,9 +69,9 @@ public class CapsCheck implements Listener
 	                    for(int i = 0; i < len; i++)
 	                    {
 	                        Player player2 = arr[i];
-	                        if(player2.isOp())
+	                        if(player2.hasPermission("mutenizer.notify"))
 	                        {
-	                            player2.sendMessage((new StringBuilder(pre)).append(p.getName()).append(" just swore and lost 1 warning.").toString());
+	                            player2.sendMessage((new StringBuilder(pre)).append(p.getName()).append(" just spammed captials and lost 1 warning.").toString());
 	                        }
 	                    }
 	                }
@@ -115,9 +119,9 @@ public class CapsCheck implements Listener
 			    	                    	for(int i = 0; i < len; i++)
 			    	                    	{
 			    	                    		Player player2 = arr[i];
-			    	                    		if(player2.isOp())
+			    	                    		if(player2.hasPermission("mutenizer.notify"))
 			    	                    		{
-			    	                    			player2.sendMessage((new StringBuilder(pre)).append(" ").append(uName.toUpperCase()).append(" was banned for repeated swearing.").toString());
+			    	                    			player2.sendMessage((new StringBuilder(pre)).append(" ").append(uName.toUpperCase()).append(" was banned for spamming capitals.").toString());
 			    	                    		}
 			    	                    	}
 			    	                    }
@@ -132,7 +136,7 @@ public class CapsCheck implements Listener
 			    	                    	for(int i = 0; i < len; i++)
 			    	                    	{
 			    	                    		Player player2 = arr[i];
-			    	                    		if(player2.isOp())
+			    	                    		if(player2.hasPermission("mutenizer.notify"))
 			    	                    		{
 			    	                    			player2.sendMessage((new StringBuilder(pre)).append(" ").append(uName.toUpperCase()).append(" was banned for spamming capitals.").toString());
 			    	                    		}

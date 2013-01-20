@@ -103,7 +103,7 @@ public class ServerChatPlayerListener extends JavaPlugin implements Listener
 	                    for(int i = 0; i < len; i++)
 	                    {
 	                        Player player2 = arr[i];
-	                        if(player2.isOp())
+	                        if(player2.hasPermission("mutenizer.notify"))
 	                        {
 	                            player2.sendMessage((new StringBuilder(pre)).append(" ").append(player.getName().toUpperCase()).append(" just swore and lost 1 warning.").toString());
 	                        }
@@ -168,7 +168,7 @@ public class ServerChatPlayerListener extends JavaPlugin implements Listener
 			    	                    for(int i = 0; i < len; i++)
 			    	                    {
 			    	                        Player player2 = arr[i];
-			    	                        if(player2.isOp())
+			    	                        if(player2.hasPermission("mutenizer.notify"))
 			    	                        {
 			    	                            player2.sendMessage((new StringBuilder(pre)).append(" ").append(player.getName().toUpperCase()).append(" was banned for repeated swearing.").toString());
 			    	                        }
@@ -183,7 +183,7 @@ public class ServerChatPlayerListener extends JavaPlugin implements Listener
 			    	                    	for(int i = 0; i < len; i++)
 			    	                    	{
 			    	                    		Player player2 = arr[i];
-			    	                    		if(player2.isOp())
+			    	                    		if(player2.hasPermission("mutenizer.notify"))
 			    	                    		{
 			    	                    			player2.sendMessage((new StringBuilder(pre)).append(" ").append(uName.toUpperCase()).append(" was banned for repeated swearing.").toString());
 			    	                    		}
@@ -202,7 +202,6 @@ public class ServerChatPlayerListener extends JavaPlugin implements Listener
 					if(type.contains(("damage").toLowerCase()))
 					{
 						player.damage(plugin.getConfig().getInt("Damage"));
-					
 					}
 		    	}
 			}
@@ -231,11 +230,11 @@ public class ServerChatPlayerListener extends JavaPlugin implements Listener
     	{
     		plugin.addUserL(uName.toLowerCase());
     	}
-    	if(p.isOp())
+    	if(p.hasPermission("mutenizer.version"))
     	{
     		if(plugin.isUpdated())
     		{
-    			p.sendMessage(new StringBuilder(pre).append(" There is an updated version of Mutenizer").toString());
+    			p.sendMessage(new StringBuilder(pre).append(" There is an updated version of Mutenizer. Download at http://dev.bukkit.org/server-mods/mutenizer").toString());
     		}
     	}
     }

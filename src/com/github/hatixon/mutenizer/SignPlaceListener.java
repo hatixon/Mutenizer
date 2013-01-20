@@ -103,7 +103,7 @@ public class SignPlaceListener implements Listener
 			                    for(int i = 0; i < len; i++)
 			                    {
 			                        Player player2 = arr[i];
-			                        if(player2.isOp())
+			                        if(player2.hasPermission("mutenizer.notify"))
 			                        {
 			                            player2.sendMessage((new StringBuilder(pre)).append(" ").append(player.getName().toUpperCase()).append(" just swore and lost 1 warning.").toString());
 			                        }
@@ -169,7 +169,7 @@ public class SignPlaceListener implements Listener
 					    	                    	for(int i = 0; i < len; i++)
 					    	                    	{
 					    	                    		Player player2 = arr[i];
-					    	                    		if(player2.isOp())
+					    	                    		if(player2.hasPermission("mutenizer.notify"))
 					    	                    		{
 					    	                    			player2.sendMessage((new StringBuilder(pre)).append(" ").append(player.getName().toUpperCase()).append(" was banned for repeated swearing.").toString());
 					    	                    		}
