@@ -39,5 +39,3 @@ BanCommands:
   Ban: ban
   InstaBan: ban 
   CapsBan: ban
-Warnings:
-  Warned:

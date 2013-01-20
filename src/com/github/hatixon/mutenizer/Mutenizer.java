@@ -36,6 +36,8 @@ public class Mutenizer extends JavaPlugin
 	private File blackFile = null;
 	private FileConfiguration instantConfig = null;
 	private File instantFile = null;
+	private FileConfiguration warnConfig = null;
+	private File warnFile = null;
 	
 	private Map blackWordList;
 	 
@@ -58,6 +60,21 @@ public class Mutenizer extends JavaPlugin
             String thisLine = (String)i.next();
             userList.put(thisLine, "");
 		}
+	}
+	
+	public void reloadWarnConfig()
+	{
+		if(warnConfig == null)
+		{
+			warnFile = new File(getDataFolder(), "warnings.yml");
+		}
+		warnConfig = YamlConfiguration.loadConfiguration(warnFile);
+		
+	    InputStream defConfigStream = this.getResource("warnings.yml");
+	    if (defConfigStream != null) {
+	        YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
+	        warnConfig.setDefaults(defConfig);
+	    }
 	}
 	
 	public void reloadUserConfig()
@@ -215,6 +232,24 @@ public class Mutenizer extends JavaPlugin
             getInstantConfig().save(instantFile);
         } catch (IOException ex) {
             this.getLogger().log(Level.SEVERE, "Could not save config to " + instantFile, ex);
+        }
+    }
+    
+    public FileConfiguration getWarnConfig() {
+        if (warnConfig == null) {
+            this.reloadWarnConfig();
+        }
+        return warnConfig;
+    }
+    
+    public void saveWarnConfig() {
+        if (warnConfig == null || warnFile == null) {
+        return;
+        }
+        try {
+            getWarnConfig().save(warnFile);
+        } catch (IOException ex) {
+            this.getLogger().log(Level.SEVERE, "Could not save config to " + warnFile, ex);
         }
     }
 	
@@ -420,11 +455,13 @@ public class Mutenizer extends JavaPlugin
 		this.getWhiteConfig().options().copyDefaults(true);
 		this.getBlackConfig().options().copyDefaults(true);
 		this.getInstantConfig().options().copyDefaults(true);
+		this.getWarnConfig().options().copyDefaults(true);
 		saveDefaultConfig();
 		saveUserConfig();
 		saveWhiteConfig();
 		saveBlackConfig();
 		saveInstaConfig();
+		saveWarnConfig();
 	}
 	
 	 
@@ -476,7 +513,7 @@ public class Mutenizer extends JavaPlugin
 	
 	public Integer getRemWarn(String uName)
 	{
-		return getConfig().getInt((new StringBuilder().append("Warnings.Warned.").append((uName).toLowerCase())).toString());
+		return getWarnConfig().getInt((new StringBuilder().append("Warnings.Warned.").append((uName).toLowerCase())).toString());
 	}
 	
 	public String getMessageKick()
@@ -491,7 +528,8 @@ public class Mutenizer extends JavaPlugin
 	
 	public void resetBanned(String uName)
 	{
-		getConfig().set(((new StringBuilder().append("Warnings.Warned.").append(uName.toLowerCase())).toString()), getTotWarn());
+		getWarnConfig().set(((new StringBuilder().append("Warnings.Warned.").append(uName.toLowerCase())).toString()), getTotWarn());
+		saveWarnConfig();
 	}
 	
 	public Integer getTotWarn()
@@ -501,8 +539,8 @@ public class Mutenizer extends JavaPlugin
 	
     public void setRemWarn(String uName, Integer remWarn)
     {
-        getConfig().set((new StringBuilder("Warnings.Warned.")).append(uName.toLowerCase()).toString(), remWarn);
-        saveConfig();
+        getWarnConfig().set((new StringBuilder("Warnings.Warned.")).append(uName.toLowerCase()).toString(), remWarn);
+        saveWarnConfig();
     }
     
     public Integer getWarnBKick()
@@ -546,8 +584,8 @@ public class Mutenizer extends JavaPlugin
 	
 	public void setWarnJoin(String uName)
 	{
-		getConfig().set((new StringBuilder("Warnings.Warned.")).append(uName.toLowerCase()).toString(), getTotWarn());
-		saveConfig();
+		getWarnConfig().set((new StringBuilder("Warnings.Warned.")).append(uName.toLowerCase()).toString(), getTotWarn());
+		saveWarnConfig();
 	}
 	
 	public String getJoinMessage()
@@ -687,8 +725,8 @@ public class Mutenizer extends JavaPlugin
 	
 	public void resetWarn(String uName)
 	{
-		getConfig().set((new StringBuilder("Warnings.Warned.").append(uName).toString()), getTotWarn());
-		saveConfig();
+		getWarnConfig().set((new StringBuilder("Warnings.Warned.").append(uName).toString()), getTotWarn());
+		saveWarnConfig();
 	}
 	
 	public void saveWhiteList()

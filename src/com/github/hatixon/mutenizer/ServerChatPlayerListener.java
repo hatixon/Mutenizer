@@ -219,7 +219,7 @@ public class ServerChatPlayerListener extends JavaPlugin implements Listener
     	ChatColor RED = ChatColor.RED;
     	ChatColor YEL = ChatColor.YELLOW;
 		String pre = (new StringBuilder().append(RED).append("[Mutenizer]").append(YEL)).toString();
-    	if(plugin.getConfig().getString(userWarnings) == null)
+    	if(plugin.getWarnConfig().getString(userWarnings) == null)
     	{
     		plugin.setWarnJoin(uName);
     		p.sendMessage(new StringBuilder(pre).append(plugin.getJoinMessage()).toString());

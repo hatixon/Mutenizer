@@ -333,7 +333,7 @@ public class ServerCommandExecutor implements CommandExecutor
 						if(args.length == 2)
 						{
 							String uName = args[1];
-							if(plugin.getConfig().getString(new StringBuilder("Warnings.Warned.").append(uName.toLowerCase()).toString()) == null)
+							if(plugin.getWarnConfig().getString(new StringBuilder("Warnings.Warned.").append(uName.toLowerCase()).toString()) == null)
 							{
 								ccs.sendMessage(new StringBuilder(pre).append(" ").append(uName.toUpperCase()).append(" does not exist. Check config if you believe this is a mistake.").toString());
 							}else
@@ -771,7 +771,7 @@ public class ServerCommandExecutor implements CommandExecutor
 			            		if(args.length == 2)
 			            		{
 			            			String uName = args[1];
-			            			if(plugin.getConfig().getString(new StringBuilder("Warnings.Warned.").append(uName.toLowerCase()).toString()) == null)
+			            			if(plugin.getWarnConfig().getString(new StringBuilder("Warnings.Warned.").append(uName.toLowerCase()).toString()) == null)
 			            			{
 			            				p.sendMessage(new StringBuilder(pre).append(" ").append(uName.toUpperCase()).append(" does not exist. Check config if you believe this is a mistake.").toString());
 			            			}else
