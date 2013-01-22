@@ -1,7 +1,6 @@
 package com.github.hatixon.mutenizer;
 
 import java.util.*;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.*;
@@ -28,7 +27,6 @@ public class ServerCommandExecutor implements CommandExecutor
 		Map userList = plugin.getUserMap();
 		Map instaBanList = plugin.getBanList();
 		String pre = (new StringBuilder().append(RED).append("[Mutenizer]").append(YEL)).toString();
-		String pre2 = (new StringBuilder().append(RED).append("[Mutenizer]").append(ChatColor.WHITE)).toString();
 		String cantUse = new StringBuilder(pre).append(" You can not use this command!").toString();
 		if(sender instanceof ConsoleCommandSender)
 		{
@@ -43,24 +41,28 @@ public class ServerCommandExecutor implements CommandExecutor
 				if(args.length > 0)
 				{
 					String param = args[0];
-					
-	            	if(param.equalsIgnoreCase("reload"))
-	            	{
-	            		plugin.getServer().getPluginManager().disablePlugin(plugin);
-	            		plugin.getServer().getPluginManager().enablePlugin(plugin);
-	            		ccs.sendMessage(new StringBuilder(pre).append(" Successfully reloaded!").toString());
-	            	}
 	            	
 					if(param.equalsIgnoreCase("resetall"))
 					{
 						String thisPlayer;
 						for(Iterator iterator = userList.entrySet().iterator(); iterator.hasNext();)
         	            {
-        	                java.util.Map.Entry entry = (java.util.Map.Entry)iterator.next();
-        	                thisPlayer = (String)entry.getKey();
-        	                plugin.resetWarn(thisPlayer);
+							if(args.length > 1)
+							{
+								String amount = args[1];
+								java.util.Map.Entry entry = (java.util.Map.Entry)iterator.next();
+								thisPlayer = (String)entry.getKey();
+								plugin.editWarn(thisPlayer, amount);
+								ccs.sendMessage(new StringBuilder(pre).append(" Players warnings have been reset to ").append(amount).toString());
+							}else
+							{
+								java.util.Map.Entry entry = (java.util.Map.Entry)iterator.next();
+								thisPlayer = (String)entry.getKey();
+								plugin.resetWarn(thisPlayer);
+								ccs.sendMessage(new StringBuilder(pre).append(" Players warnings have been reset to default").toString());
+							}
         	            }
-						ccs.sendMessage(new StringBuilder(pre).append(" Players warnings have been reset to default!").toString());
+						
 						return true;
 					}
 					if(param.equalsIgnoreCase("warnings"))
@@ -87,9 +89,17 @@ public class ServerCommandExecutor implements CommandExecutor
             			}
             			return true;
 					}
-					if(!param.equalsIgnoreCase("whitelist") && !param.equalsIgnoreCase("blacklist") && !param.equalsIgnoreCase("reset") && !param.equalsIgnoreCase("warnings") && !param.equalsIgnoreCase("help") && !param.equalsIgnoreCase("instaban") && !param.equalsIgnoreCase("resetall") && !param.equalsIgnoreCase("info")  && !param.equalsIgnoreCase("reload"))
+					if(!param.equalsIgnoreCase("whitelist") 
+							&& !param.equalsIgnoreCase("blacklist") 
+							&& !param.equalsIgnoreCase("reset") 
+							&& !param.equalsIgnoreCase("warnings") 
+							&& !param.equalsIgnoreCase("help") 
+							&& !param.equalsIgnoreCase("instaban") 
+							&& !param.equalsIgnoreCase("resetall") 
+							&& !param.equalsIgnoreCase("info")
+							&& !param.equalsIgnoreCase("set"))
 	                {
-	                	ccs.sendMessage(new StringBuilder(pre).append("No such command. Use /mutenizer help").toString());
+	                	ccs.sendMessage(new StringBuilder(pre).append(" No such command. Use /mutenizer help").toString());
 	                	return true;
 	                }
 
@@ -136,6 +146,10 @@ public class ServerCommandExecutor implements CommandExecutor
 		            			if(args.length > 2)
 		                        {
 		                            String whiteWord = args[2].toLowerCase();
+		                            if(whiteWord.indexOf("\\w*") > 0)
+		                            {
+		                            	ccs.sendMessage(new StringBuilder(pre).append(" You do not need to put \\w* in the word anymore. The plugin will do that for you").toString());
+		                            }
 		                            if(plugin.addWhiteWord(whiteWord))
 		                            {
 		                                ccs.sendMessage(new StringBuilder(pre).append(" ").append(whiteWord).append(" was added to the whitelist.").toString());
@@ -184,10 +198,10 @@ public class ServerCommandExecutor implements CommandExecutor
 		            	if(args[1].equalsIgnoreCase("help"))
 		            	{
 		            		ccs.sendMessage(new StringBuilder(pre).append(" /mutenizer whitelist parameters are:").toString());
-		            		ccs.sendMessage(new StringBuilder(pre).append(" help - this command").toString());
-		            		ccs.sendMessage(new StringBuilder(pre).append(" list - lists all the whitelisted words").toString());
-		            		ccs.sendMessage(new StringBuilder(pre).append(" add word - add an allowed word to the whitelist").toString());
-		            		ccs.sendMessage(new StringBuilder(pre).append(" delete [word] - delete a word from the whitelist").toString());
+		            		ccs.sendMessage(new StringBuilder().append(" help - this command").toString());
+		            		ccs.sendMessage(new StringBuilder().append(" list - lists all the whitelisted words").toString());
+		            		ccs.sendMessage(new StringBuilder().append(" add word - add an allowed word to the whitelist").toString());
+		            		ccs.sendMessage(new StringBuilder().append(" delete [word] - delete a word from the whitelist").toString());
 	        			}
 		            	return true;
 	            	}
@@ -305,15 +319,15 @@ public class ServerCommandExecutor implements CommandExecutor
 						if(args[1].equalsIgnoreCase("help"))
 						{
 							ccs.sendMessage(new StringBuilder(pre).append(" /mutenizer blacklist parameters are:").toString());
-							ccs.sendMessage(new StringBuilder(pre2).append("help - this command").toString());
-							ccs.sendMessage(new StringBuilder(pre2).append("add:").toString());
-							ccs.sendMessage(new StringBuilder(pre2).append("    - to add a banned word to the blacklist use add [word]").toString());
-							ccs.sendMessage(new StringBuilder(pre2).append("    - to add a replacement use add [wordtoreplace] [wordtoreplacewith]").toString());
-							ccs.sendMessage(new StringBuilder(pre2).append("#see config for formatting styles#").toString());
-							ccs.sendMessage(new StringBuilder(pre2).append("delete:").toString());
-							ccs.sendMessage(new StringBuilder(pre2).append("       - to delete a single word delete [word]").toString());	
-							ccs.sendMessage(new StringBuilder(pre2).append("       - to delete a word and its replacement delete [replacedword] [replacingword]").toString());
-							ccs.sendMessage(new StringBuilder(pre2).append("list - lists all the blacklisted words").toString());
+							ccs.sendMessage(new StringBuilder().append("help - this command").toString());
+							ccs.sendMessage(new StringBuilder().append("add:").toString());
+							ccs.sendMessage(new StringBuilder().append("    - to add a banned word to the blacklist use add [word]").toString());
+							ccs.sendMessage(new StringBuilder().append("    - to add a replacement use add [wordtoreplace] [wordtoreplacewith]").toString());
+							ccs.sendMessage(new StringBuilder().append("#see config for formatting styles#").toString());
+							ccs.sendMessage(new StringBuilder().append("delete:").toString());
+							ccs.sendMessage(new StringBuilder().append("       - to delete a single word delete [word]").toString());	
+							ccs.sendMessage(new StringBuilder().append("       - to delete a word and its replacement delete [replacedword] [replacingword]").toString());
+							ccs.sendMessage(new StringBuilder().append("list - lists all the blacklisted words").toString());
 						}
 						return true;
 	        		}
@@ -443,13 +457,42 @@ public class ServerCommandExecutor implements CommandExecutor
 	            		}
 		            	if(args[1].equalsIgnoreCase("help"))
 		            	{
-		            		ccs.sendMessage(new StringBuilder(pre).append(" /mutenizer instaban list parameters are:").toString());
-		            		ccs.sendMessage(new StringBuilder(pre).append(" help - this command").toString());
-		            		ccs.sendMessage(new StringBuilder(pre).append(" list - lists all the instaban listed instaban list").toString());
-		            		ccs.sendMessage(new StringBuilder(pre).append(" delete [word] - delete a word from the instaban list").toString());
+		            		ccs.sendMessage(new StringBuilder(pre).append(" /mutenizer instaban parameters are:").toString());
+		            		ccs.sendMessage(new StringBuilder().append(" help - this command").toString());
+		            		ccs.sendMessage(new StringBuilder().append(" list - lists all the instaban listed instaban list").toString());
+		            		ccs.sendMessage(new StringBuilder().append(" delete [word] - delete a word from the instaban list").toString());
+		            		ccs.sendMessage(new StringBuilder().append(" add [word] - add a word to the instaban list").toString());
 	        			}
-		            	return true;
+	            	return true;
 	            	}
+	            	if(param.equalsIgnoreCase("set"))
+	            	{
+	            		if(args.length < 3)
+	            		{
+	            			ccs.sendMessage(new StringBuilder(pre).append(" Not enough arguments /mutenizer set <player> <amount>").toString());
+	            		}
+	            		else
+	            		if(args.length > 3)
+	            		{
+	            			ccs.sendMessage(new StringBuilder(pre).append(" Too many arguments /mutenizer set <player> <amount>").toString());
+	            		}
+	            		else
+	            		if(args.length == 3)
+	            		{
+	            			String uName = args[1];
+	            			String amount = args[2];
+	            			if(plugin.getWarnConfig().getString(new StringBuilder("Warnings.Warned.").append(uName.toLowerCase()).toString()) == null)
+	            			{
+	            				ccs.sendMessage(new StringBuilder(pre).append(" ").append(uName.toUpperCase()).append(" does not exist. Check config if you believe this is a mistake.").toString());
+	            			}else
+	            			{
+	            				plugin.editWarn(uName, amount);
+		            			ccs.sendMessage(new StringBuilder(pre).append(" ").append(uName.toUpperCase()).append(" has had their warnings set to ").append(amount).toString());
+	            			}
+	            		}
+	            		return true;
+	            	}
+	            	
 		            if(param.equalsIgnoreCase("help"))
 		            {
 		            	ccs.sendMessage(new StringBuilder(pre).append(" List of mutenizer's available commands:").toString());
@@ -458,6 +501,8 @@ public class ServerCommandExecutor implements CommandExecutor
 		            	ccs.sendMessage(new StringBuilder().append(RED).append("/mutenizer instaban - use /mutenizer instaban help for more").toString());
 		            	ccs.sendMessage(new StringBuilder().append(RED).append("/mutenizer warnings [player] - checks a players warnings").toString());
 		            	ccs.sendMessage(new StringBuilder().append(RED).append("/mutenizer reset [player] - resets a players warnings to default").toString());
+		            	ccs.sendMessage(new StringBuilder().append(RED).append("/mutenizer resetall - resets all players to default warnings").toString());
+		            	ccs.sendMessage(new StringBuilder().append(RED).append("/mutenizer info - displays plugin info").toString());
 		            	ccs.sendMessage(new StringBuilder().append(RED).append("/mutenizer help - this command").toString());
 		            	return true;
 		            }
@@ -473,15 +518,22 @@ public class ServerCommandExecutor implements CommandExecutor
 		        {
 					if(args.length < 1)
 					{
-						p.sendMessage(new StringBuilder(pre).append("/mutenizer help").toString());
+						p.sendMessage(new StringBuilder(pre).append(" /mutenizer help").toString());
 						return true;
 					}
 		            if(args.length > 0)
 		            {
 		                String param = args[0].toLowerCase();
-		                if(!param.equalsIgnoreCase("whitelist") && !param.equalsIgnoreCase("blacklist") && !param.equalsIgnoreCase("reset") && !param.equalsIgnoreCase("warnings") && !param.equalsIgnoreCase("help") && !param.equalsIgnoreCase("info") && !param.equalsIgnoreCase("instaban")  && !param.equalsIgnoreCase("reload"))
+		                if(!param.equalsIgnoreCase("whitelist")
+		                		&& !param.equalsIgnoreCase("blacklist")
+		                		&& !param.equalsIgnoreCase("reset") 
+		                		&& !param.equalsIgnoreCase("warnings") 
+		                		&& !param.equalsIgnoreCase("help") 
+		                		&& !param.equalsIgnoreCase("info") 
+		                		&& !param.equalsIgnoreCase("instaban") 
+		                		&& !param.equalsIgnoreCase("set"))
 		                {
-		                	p.sendMessage(new StringBuilder(pre).append("No such command. Use /mutenizer help").toString());
+		                	p.sendMessage(new StringBuilder(pre).append(" No such command. Use /mutenizer help").toString());
 		                	return true;
 		                }
 		            	if(p.hasPermission("mutenizer"))
@@ -494,7 +546,10 @@ public class ServerCommandExecutor implements CommandExecutor
 			            			return true;
 			            		}
 			            		
-			            		if(!args[1].equalsIgnoreCase("list") && !args[1].equalsIgnoreCase("add") && !args[1].equalsIgnoreCase("delete")&& !args[1].equalsIgnoreCase("help"))
+			            		if(!args[1].equalsIgnoreCase("list")
+			            				&& !args[1].equalsIgnoreCase("add")
+			            				&& !args[1].equalsIgnoreCase("delete")
+			            				&& !args[1].equalsIgnoreCase("help"))
 			            		{
 			            			p.sendMessage(new StringBuilder(pre).append(" '").append(args[1]).append("' is not a valid parameter /mutenizer whitelist help").toString());
 			            			return true;
@@ -502,7 +557,7 @@ public class ServerCommandExecutor implements CommandExecutor
 			            		
 			            		if(args[1].equalsIgnoreCase("list"))
 				            	{
-				            		if(p.hasPermission("mutenizer.list"))
+				            		if(p.hasPermission("mutenizer.list") || p.hasPermission("mutenizer.*"))
 				            		{
 				        	            String thisWord;
 				        	            String replaceAppend;
@@ -525,7 +580,7 @@ public class ServerCommandExecutor implements CommandExecutor
 
 				            	if(args[1].equalsIgnoreCase("add"))
 				            	{
-				            		if(p.hasPermission("mutenizer.edit"))
+				            		if(p.hasPermission("mutenizer.edit") || p.hasPermission("mutenizer.*"))
 				            		{
 					            		if(args.length > 3)
 					            		{
@@ -557,7 +612,7 @@ public class ServerCommandExecutor implements CommandExecutor
 				            	}
 				            	if(args[1].equalsIgnoreCase("delete"))
 				            	{
-				            		if(p.hasPermission("mutenizer.edit"))
+				            		if(p.hasPermission("mutenizer.edit") || p.hasPermission("mutenizer.*"))
 				            		{		
 					            		if(args.length > 3)
 					            		{
@@ -592,10 +647,10 @@ public class ServerCommandExecutor implements CommandExecutor
 				            	if(args[1].equalsIgnoreCase("help"))
 				            	{
 				            		p.sendMessage(new StringBuilder(pre).append(" /mutenizer whitelist parameters are:").toString());
-				            		p.sendMessage(new StringBuilder(pre).append(" help - this command").toString());
-				            		p.sendMessage(new StringBuilder(pre).append(" list - lists all the whitelisted words").toString());
-				            		p.sendMessage(new StringBuilder(pre).append(" add word - add an allowed word to the white").toString());
-				            		p.sendMessage(new StringBuilder(pre).append(" delete [word] - delete a word from the whitelist").toString());
+				            		p.sendMessage(new StringBuilder().append(" help - this command").toString());
+				            		p.sendMessage(new StringBuilder().append(" list - lists all the whitelisted words").toString());
+				            		p.sendMessage(new StringBuilder().append(" add word - add an allowed word to the whitelist").toString());
+				            		p.sendMessage(new StringBuilder().append(" delete [word] - delete a word from the whitelist").toString());
 			        			}
 				            	return true;
 			            	}
@@ -607,7 +662,7 @@ public class ServerCommandExecutor implements CommandExecutor
 
 		            	if(param.equalsIgnoreCase("blacklist"))
 			            {
-			        		if(p.hasPermission("mutenizer"))
+			        		if(p.hasPermission("mutenizer") || p.hasPermission("mutenizer.*"))
 			        		{
 			            		if(args.length == 1)
 			            		{
@@ -623,7 +678,7 @@ public class ServerCommandExecutor implements CommandExecutor
 
 				            	if(args[1].equalsIgnoreCase("list"))
 				            	{
-				            		if(p.hasPermission("mutenizer.list"))
+				            		if(p.hasPermission("mutenizer.list") || p.hasPermission("mutenizer.*"))
 				            		{
 				        	            String thisWord;
 				        	            String replaceAppend;
@@ -644,7 +699,7 @@ public class ServerCommandExecutor implements CommandExecutor
 			            		}
 				            	if(args[1].equalsIgnoreCase("add"))
 				                {
-				            		if(p.hasPermission("mutenizer.edit"))
+				            		if(p.hasPermission("mutenizer.edit") || p.hasPermission("mutenizer.*"))
 				            		{
 				                        if(args.length > 2)
 				                        {
@@ -689,7 +744,7 @@ public class ServerCommandExecutor implements CommandExecutor
 				                }
 				            	if(args[1].equalsIgnoreCase("delete"))
 				            	{
-				            		if(p.hasPermission("mutenizer.edit"))
+				            		if(p.hasPermission("mutenizer.edit") || p.hasPermission("mutenizer.*"))
 					            	{
 				            			if(args.length > 2)
 				                        {
@@ -736,15 +791,15 @@ public class ServerCommandExecutor implements CommandExecutor
 				            	if(args[1].equalsIgnoreCase("help"))
 				            	{
 				            		p.sendMessage(new StringBuilder(pre).append(" /mutenizer blacklist parameters are:").toString());
-				            		p.sendMessage(new StringBuilder(pre2).append("help - this command").toString());
-				            		p.sendMessage(new StringBuilder(pre2).append("add:").toString());
-				            		p.sendMessage(new StringBuilder(pre2).append("    - to add a banned word to the blacklist use add [word]").toString());
-				            		p.sendMessage(new StringBuilder(pre2).append("    - to add a replacement use add [wordtoreplace] [wordtoreplacewith]").toString());
-				            		p.sendMessage(new StringBuilder(pre2).append("#see config for formatting styles#").toString());
-				            		p.sendMessage(new StringBuilder(pre2).append("delete:").toString());
-				            		p.sendMessage(new StringBuilder(pre2).append("       - to delete a single word delete [word]").toString());	
-				            		p.sendMessage(new StringBuilder(pre2).append("       - to delete a word and its replacement delete [replacedword] [replacingword]").toString());
-				            		p.sendMessage(new StringBuilder(pre2).append("list - lists all the blacklisted words").toString());
+				            		p.sendMessage(new StringBuilder().append("help - this command").toString());
+				            		p.sendMessage(new StringBuilder().append("add:").toString());
+				            		p.sendMessage(new StringBuilder().append("    - to add a banned word to the blacklist use add [word]").toString());
+				            		p.sendMessage(new StringBuilder().append("    - to add a replacement use add [wordtoreplace] [wordtoreplacewith]").toString());
+				            		p.sendMessage(new StringBuilder().append("#see config for formatting styles#").toString());
+				            		p.sendMessage(new StringBuilder().append("delete:").toString());
+				            		p.sendMessage(new StringBuilder().append("       - to delete a single word delete [word]").toString());	
+				            		p.sendMessage(new StringBuilder().append("       - to delete a word and its replacement delete [replacedword] [replacingword]").toString());
+				            		p.sendMessage(new StringBuilder().append("list - lists all the blacklisted words").toString());
 			        			}
 			        		}else
 			        		{
@@ -756,7 +811,7 @@ public class ServerCommandExecutor implements CommandExecutor
 
 			            if(param.equalsIgnoreCase("reset"))
 			            {	    
-			        		if(p.hasPermission("mutenizer.reset"))
+			        		if(p.hasPermission("mutenizer.reset") || p.hasPermission("mutenizer.*"))
 			        		{
 			            		if(args.length < 2)
 			            		{
@@ -788,19 +843,9 @@ public class ServerCommandExecutor implements CommandExecutor
 			        		}
 		        		}
 			            
-		            	if(param.equalsIgnoreCase("reload"))
-		            	{	
-		            		if(p.hasPermission("mutenizer.reload"))
-		            		{
-		            			plugin.getServer().getPluginManager().disablePlugin(plugin);
-		            			plugin.getServer().getPluginManager().enablePlugin(plugin);
-		            			p.sendMessage(new StringBuilder(pre).append(" Successfully reloaded!").toString());
-		            		}
-		            	}
-			            
 		            	if(param.equalsIgnoreCase("warnings"))
 		            	{	
-			        		if(p.hasPermission("mutenizer.warnings"))
+			        		if(p.hasPermission("mutenizer.warnings") || p.hasPermission("mutenizer.*"))
 			        		{
 			            		String uName = "";
 			            		int remWarn;
@@ -846,12 +891,13 @@ public class ServerCommandExecutor implements CommandExecutor
 			        		}
 			        		return true;
 		        		}
+		            	
 		            	if(param.equalsIgnoreCase("info"))
 		            	{
 		            		p.sendMessage(new StringBuilder(pre).append("\nVersion: ").append(Bukkit.getServer().getPluginManager().getPlugin("Mutenizer").getDescription().getVersion()).append("\nAuthor: Hatixon\n").toString());
 		            		if(plugin.isUpdated())
 		            		{
-		            			if(p.hasPermission("mutenizer.version"))
+		            			if(p.hasPermission("mutenizer.version") || p.hasPermission("mutenizer.*"))
 		            			{
 		            				p.sendMessage(new StringBuilder(pre).append(" There is an updated version of Mutenizer. Download at http://dev.bukkit.org/server-mods/mutenizer").toString());
 		            			}
@@ -859,6 +905,7 @@ public class ServerCommandExecutor implements CommandExecutor
 		            		}
 		            		return true;
 		            	}
+		            	
 			            if(param.equalsIgnoreCase("instaban"))
 		            	{
 		            		if(args.length < 2)
@@ -866,16 +913,15 @@ public class ServerCommandExecutor implements CommandExecutor
 		            			p.sendMessage(new StringBuilder(pre).append(" /mutenizer instaban help").toString());
 		            			return true;
 		            		}
-		            		
 		            		if(!args[1].equalsIgnoreCase("list") && !args[1].equalsIgnoreCase("add") && !args[1].equalsIgnoreCase("delete")&& !args[1].equalsIgnoreCase("help"))
 		            		{
-		            			p.sendMessage(new StringBuilder().append(RED).append(" ").append(args[1]).append(" is not a valid parameter /mutenizer instaban help").toString());
+		            			p.sendMessage(new StringBuilder(pre).append(" '").append(args[1]).append("' is not a valid parameter /mutenizer instaban help").toString());
 		            			return true;
 		            		}
-		            		
 		            		if(args[1].equalsIgnoreCase("list"))
 			            	{
-
+		            			if(p.hasPermission("mutenizer.list") || p.hasPermission("mutenizer.*"))
+		            			{
 			        	            String thisWord;
 			        	            String replaceAppend;
 			        	            p.sendMessage((new StringBuilder(pre).append(" Instaban words:")).toString());
@@ -887,11 +933,11 @@ public class ServerCommandExecutor implements CommandExecutor
 			        	                replaceAppend = thisReplace.length() <= 0 ? "" : (new StringBuilder(":")).append(thisReplace).toString();
 			        	            }
 			            			return true;
-
+		            			}
 		            		}
 			            	if(args[1].equalsIgnoreCase("add"))
 			            	{
-			            		if(p.hasPermission("mutenizer.edit"))
+			            		if(p.hasPermission("mutenizer.edit") || p.hasPermission("mutenizer.*"))
 			            		{
 				            		if(args.length > 3)
 				            		{
@@ -922,7 +968,7 @@ public class ServerCommandExecutor implements CommandExecutor
 			            	}
 			            	if(args[1].equalsIgnoreCase("delete"))
 			            	{
-			            		if(p.hasPermission("mutenizer.edit"))
+			            		if(p.hasPermission("mutenizer.edit") || p.hasPermission("mutenizer.*"))
 			            		{
 				            		if(args.length > 3)
 				            		{
@@ -956,12 +1002,47 @@ public class ServerCommandExecutor implements CommandExecutor
 		            		}
 			            	if(args[1].equalsIgnoreCase("help"))
 			            	{
-			            		p.sendMessage(new StringBuilder(pre).append(" /mutenizer instaban list parameters are:").toString());
-			            		p.sendMessage(new StringBuilder(pre).append(" help - this command").toString());
-			            		p.sendMessage(new StringBuilder(pre).append(" list - lists all the instaban listed instaban list").toString());
-			            		p.sendMessage(new StringBuilder(pre).append(" delete [word] - delete a word from the instaban list").toString());
+			            		p.sendMessage(new StringBuilder(pre).append(" /mutenizer instaban parameters are:").toString());
+			            		p.sendMessage(new StringBuilder().append(" help - this command").toString());
+			            		p.sendMessage(new StringBuilder().append(" list - lists all the instaban listed instaban list").toString());
+			            		p.sendMessage(new StringBuilder().append(" delete [word] - delete a word from the instaban list").toString());
+			            		p.sendMessage(new StringBuilder().append(" add [word] - add a word to the instaban list").toString());
 		        			}
 			            	return true;
+		            	}
+		            	if(param.equalsIgnoreCase("set"))
+		            	{
+			        		if(p.hasPermission("mutenizer.set") || p.hasPermission("mutenizer.*"))
+			        		{
+			            		if(args.length < 3)
+			            		{
+			            			p.sendMessage(new StringBuilder(pre).append(" Not enough arguments /mutenizer set <player> <amount>").toString());
+			            		}
+			            		else
+			            		if(args.length > 3)
+			            		{
+			            			p.sendMessage(new StringBuilder(pre).append(" Too many arguments /mutenizer set <player> <amount>").toString());
+			            		}
+			            		else
+			            		if(args.length == 3)
+			            		{
+			            			String uName = args[1];
+			            			String amount = args[2];
+			            			if(plugin.getWarnConfig().getString(new StringBuilder("Warnings.Warned.").append(uName.toLowerCase()).toString()) == null)
+			            			{
+			            				p.sendMessage(new StringBuilder(pre).append(" ").append(uName.toUpperCase()).append(" does not exist. Check config if you believe this is a mistake.").toString());
+			            			}else
+			            			{
+			            				plugin.editWarn(uName, amount);
+				            			p.sendMessage(new StringBuilder(pre).append(" ").append(uName.toUpperCase()).append(" has had their warnings set to ").append(amount).toString());
+			            			}
+			            		}
+			            		return true;
+			            	}else
+			        		{
+			        			p.sendMessage(cantUse);
+			        			return true;
+			        		}
 		            	}
 			            if(param.equalsIgnoreCase("help"))
 			            {

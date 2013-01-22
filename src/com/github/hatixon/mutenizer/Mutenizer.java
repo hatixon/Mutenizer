@@ -55,7 +55,9 @@ public class Mutenizer extends JavaPlugin
 	
 	private Map instaBanList;
 	
-	private Map userList;                  
+	private Map userList;
+	
+	private Map commandsList;  
 	
 	public Map getUserMap()
 	{
@@ -317,6 +319,7 @@ public class Mutenizer extends JavaPlugin
 		getWhiteList();
 		getInstaBan();
 		getUserList();
+		getCommandsList();
 		getApetureSymbol();
 		if(isUpdated())
 		{
@@ -481,6 +484,7 @@ public class Mutenizer extends JavaPlugin
 		whiteWordList = new HashMap();
 		instaBanList = new HashMap();
 		userList = new HashMap();
+		commandsList = new HashMap();
 	}
 	
 	public String comPact(String message)
@@ -575,6 +579,16 @@ public class Mutenizer extends JavaPlugin
 		}
 	}
 	
+	public void getCommandsList()
+	{
+		List blackW = getConfig().getStringList("commandsList");
+		for(Iterator i = blackW.iterator(); i.hasNext();)
+		{
+            String thisLine = (String)i.next();
+            commandsList.put(thisLine, "");
+		}
+	}
+	
 	public void getInstaBan()
 	{
 		List banW = getInstantConfig().getStringList("InstaBanList");
@@ -627,6 +641,7 @@ public class Mutenizer extends JavaPlugin
 	 
 	public String censorCheck(String message)
     {
+		message = isItAllowed(message);
         boolean censored = false;
         boolean uncensored = false;
         for(Iterator iterator = blackWordList.entrySet().iterator(); iterator.hasNext();)
@@ -641,7 +656,7 @@ public class Mutenizer extends JavaPlugin
             {
                 if(thisValue.length() > 0)
                 {
-                    message = message.replaceAll(thisRegex, thisValue);
+                    message = message.replace(thisRegex, thisValue);
                     censored = true;
                 } else
                 {
@@ -662,8 +677,28 @@ public class Mutenizer extends JavaPlugin
 	 
 	public boolean didTheySwear(String message)
 	{
+		message = isItAllowed(message);
 		boolean swore = false;
         for(Iterator iterator = blackWordList.entrySet().iterator(); iterator.hasNext();)
+        {
+            java.util.Map.Entry entry = (java.util.Map.Entry)iterator.next();
+            String theWord = (String)entry.getKey();
+            String theRegex = (new StringBuilder("\\b")).append(theWord).append("\\b").toString();
+            Pattern patt = Pattern.compile(theRegex, 2);
+            Matcher m = patt.matcher(message);
+            if(m.find())
+            {
+                swore = true;
+            }
+        }
+
+        return swore;
+    }
+	
+	public boolean commandSwear(String message)
+	{
+		boolean swore = false;
+        for(Iterator iterator = commandsList.entrySet().iterator(); iterator.hasNext();)
         {
             java.util.Map.Entry entry = (java.util.Map.Entry)iterator.next();
             String theWord = (String)entry.getKey();
@@ -687,6 +722,7 @@ public class Mutenizer extends JavaPlugin
 	public boolean instaBanCheck(String message)
 	{
 		boolean instaBan = false;
+		message = isItAllowed(message);
         for(Iterator iterator = instaBanList.entrySet().iterator(); iterator.hasNext();)
         {
             java.util.Map.Entry entry = (java.util.Map.Entry)iterator.next();
@@ -714,28 +750,32 @@ public class Mutenizer extends JavaPlugin
 	}
 
 	 
-	public boolean isItAllowed(String message)
+	public String isItAllowed(String message)
 	{
-        boolean allowed = false;
         for(Iterator iterator = whiteWordList.entrySet().iterator(); iterator.hasNext();)
         {
             java.util.Map.Entry entry = (java.util.Map.Entry)iterator.next();
             String theWord = (String)entry.getKey();
-            String theRegexMatcher = (new StringBuilder("\\b")).append(theWord).append("\\b").toString();
-            Pattern patt = Pattern.compile(theRegexMatcher, 2);
+            String theRegex = (new StringBuilder("\\b")).append(theWord).append("\\b").toString();
+            Pattern patt = Pattern.compile(theRegex, 2);
             Matcher m = patt.matcher(message);
             if(m.find())
             {
-                allowed = true;
+                message = message.replaceAll(theRegex, "");
             }
         }
-
-        return allowed;
+        return message;
     }
 	
 	public void resetWarn(String uName)
 	{
 		getWarnConfig().set((new StringBuilder("Warnings.Warned.").append(uName).toString()), getTotWarn());
+		saveWarnConfig();
+	}
+	
+	public void editWarn(String uName, String amount)
+	{
+		getWarnConfig().set((new StringBuilder("Warnings.Warned.").append(uName).toString()), Integer.valueOf(amount));
 		saveWarnConfig();
 	}
 	
@@ -773,6 +813,7 @@ public class Mutenizer extends JavaPlugin
 	
     public boolean addWhiteWord(String whiteWord)
     {
+    	whiteWord = new StringBuilder().append("\\w*").append(whiteWord).append("\\w*").toString();
     	if(whiteWordList.containsKey(whiteWord))
     	{
     		return false;
@@ -794,6 +835,7 @@ public class Mutenizer extends JavaPlugin
     
     public boolean delWhiteWord(String whiteWord)
     {
+    	whiteWord = new StringBuilder().append("\\w*").append(whiteWord).append("\\w*").toString();
         if(whiteWord.indexOf(":") > 0)
         {
             String thisSplit[] = whiteWord.split(":", 2);
@@ -812,6 +854,7 @@ public class Mutenizer extends JavaPlugin
     
     public boolean addBlackWord(String blackWord)
     {
+    	blackWord = new StringBuilder().append("\\w*").append(blackWord).append("\\w*").toString();
     	if(blackWordList.containsKey(blackWord))
     	{
     		return false;
@@ -833,6 +876,7 @@ public class Mutenizer extends JavaPlugin
 
     public boolean delBlackWord(String blackWord)
     {
+    	blackWord = new StringBuilder().append("\\w*").append(blackWord).append("\\w*").toString();
         if(blackWord.indexOf(":") > 0)
         {
             String thisSplit[] = blackWord.split(":", 2);
@@ -852,6 +896,7 @@ public class Mutenizer extends JavaPlugin
 	
     public boolean addBanWord(String banWord)
     {
+    	banWord = new StringBuilder().append("\\w*").append(banWord).append("\\w*").toString();
     	if(instaBanList.containsKey(banWord))
     	{
     		return false;
@@ -873,6 +918,7 @@ public class Mutenizer extends JavaPlugin
     
     public boolean delBanWord(String banWord)
     {
+    	banWord = new StringBuilder().append("\\w*").append(banWord).append("\\w*").toString();
         if(banWord.indexOf(":") > 0)
         {
             String thisSplit[] = banWord.split(":", 2);
@@ -903,9 +949,7 @@ public class Mutenizer extends JavaPlugin
 
         getInstantConfig().set("InstaBanList", ((Object) (banListA.toArray())));
         saveInstaConfig();
-    }
-	
-    
+    }    
 
 	public boolean getCapsOn()
 	{
@@ -916,5 +960,4 @@ public class Mutenizer extends JavaPlugin
 	{
 		return getConfig().getString("Message.Caps.Kick");
 	}
-    
 }

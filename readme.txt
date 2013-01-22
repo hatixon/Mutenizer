@@ -1,4 +1,6 @@
 #ALL WORDS ARE IN THEIR RESPECTIVE .YML FILES
+#FORMATTING CAN BE FOUND AT dev.bukkit.org/server-mods/mutenizer/pages/main/formatting
+
 commandsList:
 #Commands here are listened to for swearing.
 #Command can only be one word.

@@ -49,3 +49,9 @@ permissions:
   
   mutenizer.bypass.signcheck:
     default: op
+    
+  mutenizer.notify:
+    default: op
+    
+  mutenizer.version:
+    default: op

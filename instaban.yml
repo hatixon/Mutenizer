@@ -1,5 +1,5 @@
 #ANY WORD TO BE CENSORED GOES HERE.
 #Look at http://dev.bukkit.org/server-mods/mutenizer/pages/main/formatting for help on formatting
 InstaBanList:
-- cunt
-- fuck the admins
+- \w*cunt\w*
+- \w*fuck the admins\w*

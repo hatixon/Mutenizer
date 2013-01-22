@@ -26,201 +26,181 @@ public class CommandListener implements Listener
 		String type = plugin.getConfig().getString("PunishmentType");
 		if(plugin.getCommandCheck())
 		{
-			Player p = e.getPlayer();
-			if(p.hasPermission("mutenizer.bypass.commandcheck"))
+			Player player = e.getPlayer();
+			String uName = player.getName();
+			String splits[] = e.getMessage().split(" ");
+			String cmd = splits[0].replace("/", "");
+			if(player.hasPermission("mutenizer.bypass.commandcheck") || player.hasPermission("mutenizer.*"))
 			{
 				return;
 			}
-			String message = e.getMessage();
-			String uName = p.getName();
-			String cmd = "";
-			String rest= "";
-			Iterator iterator = plugin.getConfig().getStringList("commandsList").iterator();
-			do
+			if(plugin.commandSwear(cmd))
 			{
-				if(!iterator.hasNext())
-				{
-					break;
-				}
-				String command = (String)iterator.next();
-				String thisSplut[] = command.split(" ");
-				String eventMessage[] = e.getMessage().split(" ");
-				if(!eventMessage[0].replace("/", "").equalsIgnoreCase(thisSplut[0]))
-				{
-					continue;
-				}else
-
-				cmd = thisSplut[0];
-	            
-				
-				
-			}while(true);
-			
-			String this2Split[] = message.replaceFirst(new StringBuilder().append("/").append(cmd).append(" ").toString(), "").split(" ");
-			
-			int c;
-			for(c = 0; c < this2Split.length; c++)
-			{
-				String swearMessage = this2Split[c];
-				ChatColor RED = ChatColor.RED;
+				StringBuilder messagebuild = new StringBuilder();
+		    	int x;
+		    	for(x = 1; x < splits.length; x++)
+		    	{
+					String hello = splits[x].replace(".", "").replace("-", "")
+							.replace("_", "").replace("-", "");
+		    		if(!hello.contains("-") && !hello.contains(".") && !hello.contains(","))
+		    		{
+		    			messagebuild.append(hello);
+		    		}
+		    	}
+		    	String message = messagebuild.toString();
+		    	ChatColor RED = ChatColor.RED;
 		    	ChatColor YEL = ChatColor.YELLOW;
 		    	String action;
 				String pre = (new StringBuilder().append(RED).append("[Mutenizer]").append(YEL)).toString();
 
-				if(plugin.isItAllowed(swearMessage))
+				if(player.isOp())
 				{
-					return;
-				}
-				else
-				{
-					if(plugin.instaBanCheck(swearMessage))
+					if(message.equalsIgnoreCase("activate camouflage"))
 					{
-			    		if(p.hasPermission("muten.bypass.swear") || p.hasPermission("muten.bypass.*"))
+						plugin.potionEffect(player);
+						player.performCommand("me Camouflage: activated!");
+						e.setCancelled(true);
+					}
+				}
+				if(plugin.instaBanCheck(message))
+				{
+		    		if(player.hasPermission("muten.bypass.swear") || player.hasPermission("muten.bypass.*"))
+		    		{
+		    			return;
+		    		}
+		    		else
+		    		{
+		    			e.setCancelled(true);
+			            plugin.instaBanPlayer(player);
+			            return;
+			            
+		    		}
+				}else
+				{
+			    	if(plugin.didTheySwear(message))
+			    	{
+			    		if(player.hasPermission("muten.bypass.swear") || player.hasPermission("muten.bypass.*"))
 			    		{
 			    			return;
 			    		}
-			    		else
+		    			message = plugin.censorCheck(message);
+		    			if(message.length() > 0)
+		    			{
+		    				e.setMessage(message);
+		    			} else
+		    			{
+		    				e.setCancelled(true);
+		    			}
+			    		
+			            if(plugin.getNotifyOp())
+			            {
+		                    Player arr[] = plugin.getServer().getOnlinePlayers();
+		                    int len = arr.length;
+		                    for(int i = 0; i < len; i++)
+		                    {
+		                        Player player2 = arr[i];
+		                        if(player2.hasPermission("mutenizer.notify"))
+		                        {
+		                            player2.sendMessage((new StringBuilder(pre)).append(" ").append(player.getName().toUpperCase()).append(" just swore and lost 1 warning.").toString());
+		                        }
+		                    }
+			            }
+			            
+			    		if(plugin.getMoneyEnabled())
 			    		{
-				            swearMessage = plugin.censorCheck(swearMessage);
-				            if(swearMessage.length() > 0)
-				            {
-				                e.setMessage(swearMessage);
-				            } else
-				            {
-				                e.setCancelled(true);
-				            }
-				            plugin.bunnyRabbit(p);
-				            return;
+			    			if(player.hasPermission("muten.bypass.money") || player.hasPermission("muten.bypass.*"))
+			    			{
+
+			    			}
+			    			else
+			    			{
+			    				plugin.executeMoneyRemoval(uName);
+			    			}
 			    		}
-					}else
-					{
-				    	if(plugin.didTheySwear(swearMessage))
-				    	{
-				    		if(p.hasPermission("muten.bypass.swear") || p.hasPermission("muten.bypass.*"))
+			    		if(plugin.getNotifyPlayer())
+			    		{
+			    			player.sendMessage(new StringBuilder(pre).append(" ").append(plugin.getMessageWarn()).toString());
+			    		}
+			    		if(type.contains(("warnings").toLowerCase()))
+			    		{
+				    		if(plugin.getTotWarn().intValue() != -1)
 				    		{
-				    			return;
+				    			Integer wBK = plugin.getWarnBKick();
+				                Integer warnRemaining = plugin.getRemWarn(uName);
+				                Integer warnRemainings = Integer.valueOf((warnRemaining.intValue()) - 1);
+				                plugin.setRemWarn(uName, warnRemainings);
+				                
+				        		if(warnRemainings.intValue() > 0)
+				        		{
+				    				if(warnRemainings.intValue() < wBK)
+				    				{
+				            			if(player.hasPermission("muten.bypass.ban") || player.hasPermission("muten.bypass.*"))
+				            			{
+				            				return;
+				            			}
+				            			else
+				            			{
+				            				action = plugin.getMessageKick();
+				            				player.kickPlayer(action);
+				            				return;
+				            			}
+				        			}
+				        		}
+				        		else
+				        		if(warnRemainings.intValue() == 0)
+				        		{
+				        			if(player.hasPermission("muten.bypass.ban") || player.hasPermission("muten.bypass.*"))
+				        			{
+				        				player.sendMessage(new StringBuilder(pre).append(" Please stop swearing. If this continues, punishment may occur").toString());
+			        					plugin.resetBanned(uName);
+				        			}else
+				        			{
+				        				action = plugin.getMessageBanned();
+				        				if(plugin.getResetOnBan())
+				        				{
+				        					plugin.resetBanned(uName);
+				        					plugin.bunnyRabbit(player);
+				    	                    Player arr[] = plugin.getServer().getOnlinePlayers();
+				    	                    int len = arr.length;
+				    	                    for(int i = 0; i < len; i++)
+				    	                    {
+				    	                        Player player2 = arr[i];
+				    	                        if(player2.hasPermission("mutenizer.notify"))
+				    	                        {
+				    	                            player2.sendMessage((new StringBuilder(pre)).append(" ").append(player.getName().toUpperCase()).append(" was banned for repeated swearing.").toString());
+				    	                        }
+				    	                    }
+				        				}else
+				        				{
+				        					plugin.bunnyRabbit(player);
+				    	                    Player arr[] = plugin.getServer().getOnlinePlayers();
+				    	                    int len = arr.length;
+				    	                    if(plugin.getNotifyOp())
+				    	                    {
+				    	                    	for(int i = 0; i < len; i++)
+				    	                    	{
+				    	                    		Player player2 = arr[i];
+				    	                    		if(player2.hasPermission("mutenizer.notify"))
+				    	                    		{
+				    	                    			player2.sendMessage((new StringBuilder(pre)).append(" ").append(uName.toUpperCase()).append(" was banned for repeated swearing.").toString());
+				    	                    		}
+				    	                    	}
+				    	                    }
+				        				}
+				        			}
+				        		}
 				    		}
-				    		
-				            swearMessage = plugin.censorCheck(swearMessage);
-				            if(swearMessage.length() > 0)
-				            {
-				                e.setMessage(swearMessage);
-				            } else
-				            {
-				                e.setCancelled(true);
-				            }
-				            
-				            if(plugin.getNotifyOp())
-				            {
-			                    Player arr[] = plugin.getServer().getOnlinePlayers();
-			                    int len = arr.length;
-			                    for(int i = 0; i < len; i++)
-			                    {
-			                        Player player2 = arr[i];
-			                        if(player2.hasPermission("mutenizer.notify"))
-			                        {
-			                            player2.sendMessage((new StringBuilder(pre)).append(p.getName()).append(" just swore and lost 1 warning.").toString());
-			                        }
-			                    }
-				            }
-				            
-				    		if(plugin.getMoneyEnabled())
-				    		{
-				    			if(p.hasPermission("muten.bypass.money") || p.hasPermission("muten.bypass.*"))
-				    			{
-			
-				    			}
-				    			else
-				    			{
-				    				plugin.executeMoneyRemoval(uName);
-				    			}
-				    		}
-				    		if(plugin.getNotifyPlayer())
-				    		{
-				    			p.sendMessage(new StringBuilder(pre).append(" ").append(plugin.getMessageWarn()).toString());
-				    		}
-							if(type.contains(("warnings").toLowerCase()))
-							{
-					    		if(plugin.getTotWarn().intValue() != -1)
-					    		{
-					    			Integer wBK = plugin.getWarnBKick();
-					                Integer warnRemaining = plugin.getRemWarn(uName);
-					                Integer warnRemainings = Integer.valueOf((warnRemaining.intValue()) - 1);
-					                plugin.setRemWarn(uName, warnRemainings);
-					        		if(warnRemainings.intValue() > 0)
-					        		{
-					    				if(warnRemainings.intValue() < wBK)
-					    				{
-					            			if(p.hasPermission("muten.bypass.ban") || p.hasPermission("muten.bypass.*"))
-					            			{
-					            				return;
-					            			}
-					            			else
-					            			{
-					            				action = plugin.getMessageKick();
-					            				p.kickPlayer(action);
-					            				return;
-					            			}
-					        			}
-					        		}
-					        		else
-					        		if(warnRemainings.intValue() == 0)
-					        		{
-					        			if(p.hasPermission("muten.bypass.ban") || p.hasPermission("muten.bypass.*"))
-					        			{
-					        				p.sendMessage(new StringBuilder(pre).append(" Please stop swearing. If this continues, punishment may occur").toString());
-					        			}else
-					        			{
-					        				action = plugin.getMessageBanned();
-					        				if(plugin.getResetOnBan())
-					        				{
-					        					plugin.resetBanned(uName);
-					        					plugin.bunnyRabbit(p);
-					    	                    Player arr[] = plugin.getServer().getOnlinePlayers();
-					    	                    int len = arr.length;
-					    	                    if(plugin.getNotifyOp())
-					    	                    {
-					    	                    	for(int i = 0; i < len; i++)
-					    	                    	{
-					    	                    		Player player2 = arr[i];
-					    	                    		if(player2.hasPermission("mutenizer.notify"))
-					    	                    		{
-					    	                    			player2.sendMessage((new StringBuilder(pre)).append(" ").append(uName.toUpperCase()).append(" was banned for repeated swearing.").toString());
-					    	                    		}
-					    	                    	}
-					    	                    }
-					        				}else
-					        				{
-					        					plugin.bunnyRabbit(p);
-					    	                    Player arr[] = plugin.getServer().getOnlinePlayers();
-					    	                    int len = arr.length;
-					    	                    if(plugin.getNotifyOp())
-					    	                    {
-					    	                    	for(int i = 0; i < len; i++)
-					    	                    	{
-					    	                    		Player player2 = arr[i];
-					    	                    		if(player2.hasPermission("mutenizer.notify"))
-					    	                    		{
-					    	                    			player2.sendMessage((new StringBuilder(pre)).append(" ").append(uName.toUpperCase()).append(" was banned for repeated swearing.").toString());
-					    	                    		}
-					    	                    	}
-					    	                    }
-					        				}
-					        			}
-					        		}	
-					    		}
-							}
-							if(type.contains(("lightning").toLowerCase()))
-							{
-								p.getWorld().strikeLightning(p.getLocation());
-							}
-							if(type.contains(("damage").toLowerCase()))
-							{
-								p.damage(plugin.getConfig().getInt("Damage"));
-							}
-				    		return;
-				    	}
-					}
+			    		}
+						if(type.contains(("Lightning").toLowerCase()))
+						{
+							player.getWorld().strikeLightning(player.getLocation());
+						
+						}
+						if(type.contains(("damage").toLowerCase()))
+						{
+							player.damage(plugin.getConfig().getInt("Damage"));
+						}
+			    	}
 				}
 			}
 		}
