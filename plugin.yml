@@ -1,6 +1,6 @@
 name: Mutenizer
 main: com.github.hatixon.mutenizer.Mutenizer
-version: 2.2
+version: 2.3
 
 commands:
 
@@ -54,4 +54,7 @@ permissions:
     default: op
     
   mutenizer.version:
+    default: op
+	
+  mutenizer.set:
     default: op
