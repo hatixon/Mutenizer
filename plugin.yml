@@ -1,6 +1,6 @@
 name: Mutenizer
 main: com.github.hatixon.mutenizer.Mutenizer
-version: 2.3
+version: 2.3.1
 
 commands:
 
@@ -39,9 +39,6 @@ permissions:
     default: op
   
   mutenizer.bypass.money:
-    default: op
-  
-  mutenizer.bypass.fcuk:
     default: op
   
   mutenizer.bypass.commandcheck:
