@@ -227,11 +227,14 @@ public class ServerChatPlayerListener extends JavaPlugin implements Listener
     	{
     		plugin.addUserL(uName.toLowerCase());
     	}
-    	if(p.hasPermission("mutenizer.version") || p.hasPermission("mutenizer.*"))
+    	if(plugin.getConfig().getBoolean("CheckForUpdates"))
     	{
-    		if(plugin.isUpdated())
+    		if(p.hasPermission("mutenizer.version") || p.hasPermission("mutenizer.*"))
     		{
-    			p.sendMessage(new StringBuilder(pre).append(" There is an updated version of Mutenizer. Download at http://dev.bukkit.org/server-mods/mutenizer").toString());
+    			if(plugin.isUpdated())
+    			{
+    				p.sendMessage(new StringBuilder(pre).append(" There is an updated version of Mutenizer. Download at http://dev.bukkit.org/server-mods/mutenizer").toString());
+    			}
     		}
     	}
     }

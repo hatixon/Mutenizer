@@ -123,7 +123,7 @@ public class ServerCommandExecutor implements CommandExecutor
 		        	            String thisWord;
 		        	            String replaceAppend;
 		        	            ccs.sendMessage((new StringBuilder(pre).append(" Whitelisted words:")).toString());
-		            			for(Iterator iterator = whiteList.entrySet().iterator(); iterator.hasNext(); sender.sendMessage((new StringBuilder(String.valueOf(thisWord))).append(replaceAppend).toString()))
+		            			for(Iterator iterator = whiteList.entrySet().iterator(); iterator.hasNext(); sender.sendMessage((new StringBuilder(String.valueOf(thisWord).replace("\\w*", "").replace("+?", ""))).append(replaceAppend).toString()))
 		        	            {
 		        	                java.util.Map.Entry entry = (java.util.Map.Entry)iterator.next();
 		        	                thisWord = (String)entry.getKey();
@@ -233,7 +233,7 @@ public class ServerCommandExecutor implements CommandExecutor
 							String thisWord;
 							String replaceAppend;
 							ccs.sendMessage((new StringBuilder(pre).append(" Blacklisted words:")).toString());
-							for(Iterator iterator = blackList.entrySet().iterator(); iterator.hasNext(); sender.sendMessage((new StringBuilder(String.valueOf(thisWord))).append(replaceAppend).toString()))
+							for(Iterator iterator = blackList.entrySet().iterator(); iterator.hasNext(); ccs.sendMessage((new StringBuilder(String.valueOf(thisWord).replace("\\w*", "").replace("+?", ""))).append(replaceAppend).toString()))
 							{
 								java.util.Map.Entry entry = (java.util.Map.Entry)iterator.next();
 								thisWord = (String)entry.getKey();
@@ -249,7 +249,6 @@ public class ServerCommandExecutor implements CommandExecutor
 							if(args.length > 2)
 							{
 								String blackWord = "";
-
 								if(args.length > 3)
 								{
 									if(args.length > 4)
@@ -282,7 +281,8 @@ public class ServerCommandExecutor implements CommandExecutor
 										ccs.sendMessage(new StringBuilder(pre).append(" ").append(blackWord).append(" was added to the blacklist.").toString());
 									} else
 									{
-										ccs.sendMessage(new StringBuilder(pre).append(" ").append(blackWord).append(" is already in the blacklist.").toString());
+										String blackwords[] = blackWord.split(":");
+										ccs.sendMessage(new StringBuilder(pre).append(" ").append(blackwords[0]).append(" is already in the blacklist.").toString());
 									}
 									return true;
 	                            }
@@ -327,10 +327,12 @@ public class ServerCommandExecutor implements CommandExecutor
 	                            {
 									if(plugin.delBlackWord(blackWord))
 									{
-										ccs.sendMessage(new StringBuilder(pre).append(" ").append(blackWord).append(" was deleted from the blacklist.").toString());
+										String blackwords[] = blackWord.split(":");
+										ccs.sendMessage(new StringBuilder(pre).append(" ").append(blackwords[0]).append(" was deleted from the blacklist.").toString());
 									} else
 									{
-										ccs.sendMessage(new StringBuilder(pre).append(" ").append(blackWord).append(" is not in the blacklist.").toString());
+										String blackwords[] = blackWord.split(":");
+										ccs.sendMessage(new StringBuilder(pre).append(" ").append(blackwords[0]).append(" is not in the blacklist.").toString());
 									}
 									return true;
 	                            }
@@ -382,11 +384,14 @@ public class ServerCommandExecutor implements CommandExecutor
 	            	if(param.equalsIgnoreCase("info"))
 	            	{
 	            		ccs.sendMessage(new StringBuilder(pre).append("\nVersion: ").append(Bukkit.getServer().getPluginManager().getPlugin("Mutenizer").getDescription().getVersion()).append("\nAuthor: Hatixon\n").toString());
-	            		if(plugin.isUpdated())
+	            		if(plugin.getConfig().getBoolean("CheckForUpdates"))
 	            		{
-	            			ccs.sendMessage(new StringBuilder(pre).append(" New version is available").toString());
+	            			if(plugin.isUpdated())
+	            			{
+	            				ccs.sendMessage(new StringBuilder(pre).append(" New version is available").toString());
+	            			}
+	            			return true;
 	            		}
-	            		return true;
 	            	}
 		            if(param.equalsIgnoreCase("instaban"))
 	            	{
@@ -408,7 +413,7 @@ public class ServerCommandExecutor implements CommandExecutor
 		        	            String thisWord;
 		        	            String replaceAppend;
 		        	            ccs.sendMessage((new StringBuilder(pre).append(" Instaban words:")).toString());
-		            			for(Iterator iterator = instaBanList.entrySet().iterator(); iterator.hasNext(); sender.sendMessage((new StringBuilder(String.valueOf(thisWord))).append(replaceAppend).toString()))
+		            			for(Iterator iterator = instaBanList.entrySet().iterator(); iterator.hasNext(); sender.sendMessage((new StringBuilder(String.valueOf(thisWord.replace("\\w*", "").replace("+?", "")))).append(replaceAppend).toString()))
 		        	            {
 		        	                java.util.Map.Entry entry = (java.util.Map.Entry)iterator.next();
 		        	                thisWord = (String)entry.getKey();
@@ -594,9 +599,9 @@ public class ServerCommandExecutor implements CommandExecutor
 				        	            String thisWord;
 				        	            String replaceAppend;
 				        	            p.sendMessage((new StringBuilder(pre).append(" Whitelisted words:")).toString());
-				            			for(Iterator iterator = whiteList.entrySet().iterator(); iterator.hasNext(); sender.sendMessage((new StringBuilder(String.valueOf(thisWord))).append(replaceAppend).toString()))
+				            			for(Iterator iterator = whiteList.entrySet().iterator(); iterator.hasNext(); sender.sendMessage((new StringBuilder(String.valueOf(thisWord).replace("\\w*", "").replace("+?", ""))).append(replaceAppend).toString()))
 				        	            {
-				        	                java.util.Map.Entry entry = (java.util.Map.Entry)iterator.next();
+				        	                java.util.Map.Entry entry = (java.util.Map.Entry)iterator.next(); 
 				        	                thisWord = (String)entry.getKey();
 				        	                String thisReplace = (String)entry.getValue();
 				        	                replaceAppend = thisReplace.length() <= 0 ? "" : (new StringBuilder(":")).append(thisReplace).toString();
@@ -725,7 +730,7 @@ public class ServerCommandExecutor implements CommandExecutor
 				        	            String thisWord;
 				        	            String replaceAppend;
 				        	            p.sendMessage((new StringBuilder(pre).append(" Blacklisted words:")).toString());
-				            			for(Iterator iterator = blackList.entrySet().iterator(); iterator.hasNext(); sender.sendMessage((new StringBuilder(String.valueOf(thisWord))).append(replaceAppend).toString()))
+				            			for(Iterator iterator = blackList.entrySet().iterator(); iterator.hasNext(); sender.sendMessage((new StringBuilder(String.valueOf(thisWord).replace("\\w*", "").replace("+?", ""))).append(replaceAppend).toString()))
 				        	            {
 				        	                java.util.Map.Entry entry = (java.util.Map.Entry)iterator.next();
 				        	                thisWord = (String)entry.getKey();
@@ -743,47 +748,48 @@ public class ServerCommandExecutor implements CommandExecutor
 				                {
 				            		if(p.hasPermission("mutenizer.edit") || p.hasPermission("mutenizer.*"))
 				            		{
-				                        if(args.length > 2)
-				                        {
-				                            String blackWord = "";
-
-				                            if(args.length > 3)
-				                            {
-				                            	if(args.length > 4)
-				                            	{
-				                            		p.sendMessage(new StringBuilder(pre).append("Too many arguments - /mutenizer blacklist help").toString());
-				                            	}else
-				                            	{
-					                                StringBuilder sb = new StringBuilder();
-					                                for(int i = 2; i < args.length; i++)
-					                                {
-					                                    sb.append(args[i]);
-					                                    if(i < args.length - 1)
-					                                    {
-					                                        sb.append(":");
-					                                    }
-					                                }
-					                                blackWord = sb.toString().toLowerCase();
-				                            	}
-				                            } else
-				                            {
-				                                blackWord = args[2].toLowerCase();
-				                            }
+				            			if(args.length > 2)
+										{
+											String blackWord = "";
+											if(args.length > 3)
+											{
+												if(args.length > 4)
+												{
+													p.sendMessage(new StringBuilder(pre).append("Too many arguments - /mutenizer blacklist help").toString());
+												}else
+												{
+													StringBuilder sb = new StringBuilder();
+													for(int i = 2; i < args.length; i++)
+													{
+														sb.append(args[i]);
+														if(i < args.length - 1)
+														{
+															sb.append(":");
+														}
+													}
+													blackWord = sb.toString().toLowerCase();
+												}
+											} else
+											{
+												blackWord = args[2].toLowerCase();
+											}
 				                            if(blackWord.indexOf("w*") > 0)
 				                            {
 				                            	p.sendMessage(new StringBuilder(pre).append(" You do not need to put \\w* in the word anymore. The plugin will do that for you").toString());
+				                            	return true;
 				                            }else
 				                            {
-					                            if(plugin.addBlackWord(blackWord))
-					                            {
-					                                p.sendMessage(new StringBuilder(pre).append(" ").append(blackWord).append(" was added to the blacklist.").toString());
-					                            } else
-					                            {
-					                                p.sendMessage(new StringBuilder(pre).append(" ").append(blackWord).append(" is already in the blacklist.").toString());
-					                            }
-					                            return true;
+												if(plugin.addBlackWord(blackWord))
+												{
+													p.sendMessage(new StringBuilder(pre).append(" ").append(blackWord).append(" was added to the blacklist.").toString());
+												} else
+												{
+													String blackWords[] = blackWord.split(":");
+													p.sendMessage(new StringBuilder(pre).append(" ").append(blackWords[0]).append(" is already in the blacklist.").toString());
+												}
+												return true;
 				                            }
-				                        }
+										}
 				                    }
 				            		else
 				            		{
@@ -796,48 +802,52 @@ public class ServerCommandExecutor implements CommandExecutor
 				            		if(p.hasPermission("mutenizer.edit") || p.hasPermission("mutenizer.*"))
 					            	{
 				            			if(args.length > 2)
-				                        {
-				            				
-				                            String blackWord = "";
+										{
+											
+											String blackWord = "";
 
-				                            if(args.length > 3)
-				                            {
-				                            	if(args.length > 4)
-				                            	{
-				                            		p.sendMessage(new StringBuilder(pre).append("Too many arguments - /mutenizer blacklist help").toString());
-				                            		return true;
-				                            	}else
-				                            	{
-					                                StringBuilder sb = new StringBuilder();
-					                                for(int i = 2; i < args.length; i++)
-					                                {
-					                                    sb.append(args[i]);
-					                                    if(i < args.length - 1)
-					                                    {
-					                                        sb.append(":");
-					                                    }
-					                                }
-					                                blackWord = sb.toString().toLowerCase();
-				                            	}
-				                            }else
-				                            {
-				                            	blackWord = args[2].toLowerCase();
-				                            }
+											if(args.length > 3)
+											{
+												if(args.length > 4)
+												{
+													p.sendMessage(new StringBuilder(pre).append("Too many arguments - /mutenizer blacklist help").toString());
+													return true;
+												}else
+												{
+													StringBuilder sb = new StringBuilder();
+													for(int i = 2; i < args.length; i++)
+													{
+														sb.append(args[i]);
+														if(i < args.length - 1)
+														{
+															sb.append(":");
+														}
+													}
+													blackWord = sb.toString().toLowerCase();
+												}
+											}else
+											{
+												blackWord = args[2].toLowerCase();
+											}
 				                            if(blackWord.indexOf("w*") > 0)
 				                            {
 				                            	p.sendMessage(new StringBuilder(pre).append(" You do not need to put \\w* in the word anymore. The plugin will do that for you").toString());
+				                            	return true;
 				                            }else
 				                            {
-					                            if(plugin.delBlackWord(blackWord))
-					                            {
-					                                p.sendMessage(new StringBuilder(pre).append(" ").append(blackWord).append(" was deleted from the blacklist.").toString());
-					                            } else
-					                            {
-					                                p.sendMessage(new StringBuilder(pre).append(" ").append(blackWord).append(" is not in the blacklist.").toString());
-					                            }
-					                            return true;
+												if(plugin.delBlackWord(blackWord))
+												{
+													String blackwords[] = blackWord.split(":");
+													p.sendMessage(new StringBuilder(pre).append(" ").append(blackwords[0]).append(" was deleted from the blacklist.").toString());
+												} else
+												{
+													String blackwords[] = blackWord.split(":");
+													p.sendMessage(new StringBuilder(pre).append(" ").append(blackwords[0]).append(" is not in the blacklist.").toString());
+												}
+												return true;
 				                            }
-			                        	}
+										}
+
 			            			}else
 				            		{
 				            			p.sendMessage(cantUse);
@@ -951,15 +961,18 @@ public class ServerCommandExecutor implements CommandExecutor
 		            	if(param.equalsIgnoreCase("info"))
 		            	{
 		            		p.sendMessage(new StringBuilder(pre).append("\nVersion: ").append(Bukkit.getServer().getPluginManager().getPlugin("Mutenizer").getDescription().getVersion()).append("\nAuthor: Hatixon\n").toString());
-		            		if(plugin.isUpdated())
+		            		if(plugin.getConfig().getBoolean("CheckForUpdates"))
 		            		{
-		            			if(p.hasPermission("mutenizer.version") || p.hasPermission("mutenizer.*"))
+		            			if(plugin.isUpdated())
 		            			{
-		            				p.sendMessage(new StringBuilder(pre).append(" There is an updated version of Mutenizer. Download at http://dev.bukkit.org/server-mods/mutenizer").toString());
+		            				if(p.hasPermission("mutenizer.version") || p.hasPermission("mutenizer.*"))
+		            				{
+		            					p.sendMessage(new StringBuilder(pre).append(" There is an updated version of Mutenizer. Download at http://dev.bukkit.org/server-mods/mutenizer").toString());
+		            				}
+		            				
 		            			}
-		            			
+		            			return true;
 		            		}
-		            		return true;
 		            	}
 		            	
 			            if(param.equalsIgnoreCase("instaban"))
@@ -981,7 +994,7 @@ public class ServerCommandExecutor implements CommandExecutor
 			        	            String thisWord;
 			        	            String replaceAppend;
 			        	            p.sendMessage((new StringBuilder(pre).append(" Instaban words:")).toString());
-			            			for(Iterator iterator = instaBanList.entrySet().iterator(); iterator.hasNext(); sender.sendMessage((new StringBuilder(String.valueOf(thisWord))).append(replaceAppend).toString()))
+			            			for(Iterator iterator = instaBanList.entrySet().iterator(); iterator.hasNext(); sender.sendMessage((new StringBuilder(String.valueOf(thisWord).replace("\\w*", "").replace("+?", ""))).append(replaceAppend).toString()))
 			        	            {
 			        	                java.util.Map.Entry entry = (java.util.Map.Entry)iterator.next();
 			        	                thisWord = (String)entry.getKey();
@@ -1011,7 +1024,7 @@ public class ServerCommandExecutor implements CommandExecutor
 				                            if(plugin.addBanWord(banWord))
 				                            {
 				                                p.sendMessage(new StringBuilder(pre).append(" ").append(banWord).append(" was added to the instaban.").toString());
-				                            } else
+				                            }else
 				                            {
 				                                p.sendMessage(new StringBuilder(pre).append(" ").append(banWord).append(" was already in the instaban list.").toString());
 				                            }

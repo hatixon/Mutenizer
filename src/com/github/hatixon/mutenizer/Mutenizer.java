@@ -321,9 +321,12 @@ public class Mutenizer extends JavaPlugin
 		getUserList();
 		getCommandsList();
 		getApetureSymbol();
-		if(isUpdated())
+		if(getConfig().getBoolean("CheckForUpdates"))
 		{
-			logger.info(new StringBuilder(pre).append("There is an updated version of Mutenizer. Download at http://dev.bukkit.org/server-mods/mutenizer").toString());
+			if(isUpdated())
+			{
+				logger.info(new StringBuilder(pre).append("There is an updated version of Mutenizer. Download at http://dev.bukkit.org/server-mods/mutenizer").toString());
+			}
 		}
 	}
 	
@@ -656,7 +659,7 @@ public class Mutenizer extends JavaPlugin
             {
                 if(thisValue.length() > 0)
                 {
-                    message = message.replace(thisRegex, thisValue);
+                    message = message.replaceFirst(thisRegex, thisValue);
                     censored = true;
                 } else
                 {
@@ -854,33 +857,40 @@ public class Mutenizer extends JavaPlugin
     
     public boolean addBlackWord(String blackWord)
     {
-    	blackWord = new StringBuilder().append("\\w*").append(blackWord).append("\\w*").toString();
-    	if(blackWordList.containsKey(blackWord))
-    	{
-    		return false;
-    	}
-    	else
+		if(blackWord.indexOf(":") > 0)
         {
-    		if(blackWord.indexOf(":") > 0)
-	        {
-	            String thisSplit[] = blackWord.split(":", 2);
-	            blackWordList.put(thisSplit[0], thisSplit[1]);
-	        } else
-	        {
-	            blackWordList.put(blackWord, "");
-	        }
-        saveWhiteList();
-        return true;
+            String thisSplit[] = blackWord.split(":", 2);
+            if(blackWordList.containsKey(new StringBuilder().append("\\w*").append(thisSplit[0]).append("\\w*").toString()))
+            {
+            	return false;
+            }else
+            {
+            	blackWordList.put(new StringBuilder().append("\\w*").append(thisSplit[0]).append("\\w*").toString(), thisSplit[1]);
+            }
+        } else
+        {
+        	if(!blackWordList.containsKey(new StringBuilder().append("\\w*").append(blackWord).append("\\w*").toString()))
+        	{
+        		blackWordList.put(new StringBuilder().append("\\w*").append(blackWord).append("\\w*").toString(), "");
+        		return true;
+        	}else
+        	{
+        		return false;
+        	}
         }
+        saveBlackList();
+        return true;
     }
 
     public boolean delBlackWord(String blackWord)
     {
-    	blackWord = new StringBuilder().append("\\w*").append(blackWord).append("\\w*").toString();
         if(blackWord.indexOf(":") > 0)
         {
             String thisSplit[] = blackWord.split(":", 2);
-            blackWord = thisSplit[0];
+            blackWord = new StringBuilder().append("\\w*").append(thisSplit[0]).append("\\w*").toString();
+        }else
+        {
+        	blackWord = new StringBuilder().append("\\w*").append(blackWord).append("\\w*").toString();
         }
         if(blackWordList.containsKey(blackWord))
         {
@@ -903,27 +913,15 @@ public class Mutenizer extends JavaPlugin
     	}
     	else
         {
-    		if(banWord.indexOf(":") > 0)
-	        {
-	            String thisSplit[] = banWord.split(":", 2);
-	            instaBanList.put(thisSplit[0], thisSplit[1]);
-	        } else
-	        {
-	            instaBanList.put(banWord, "");
-	        }
+    		instaBanList.put(banWord, "");
+        }
         saveBanList();
         return true;
-        }
     }
     
     public boolean delBanWord(String banWord)
     {
     	banWord = new StringBuilder().append("\\w*").append(banWord).append("\\w*").toString();
-        if(banWord.indexOf(":") > 0)
-        {
-            String thisSplit[] = banWord.split(":", 2);
-            banWord = thisSplit[0];
-        }
         if(instaBanList.containsKey(banWord))
         {
             instaBanList.remove(banWord);

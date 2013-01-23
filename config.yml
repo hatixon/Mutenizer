@@ -39,3 +39,4 @@ BanCommands:
   Ban: ban
   InstaBan: ban 
   CapsBan: ban
+CheckForUpdates: true
