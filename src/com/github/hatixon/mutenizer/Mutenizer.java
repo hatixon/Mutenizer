@@ -374,16 +374,16 @@ public class Mutenizer extends JavaPlugin
 	{
 		String uName = player.getName();
 		String banCom = getConfig().getString("BanCommands.InstaBan");
-		String comSplit[] = banCom.split(" ", 3);
-		if(comSplit.length == 1)
+		String comSplit[] = banCom.split(" ");
+		if(comSplit.length > 2)
 		{
 			Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), new StringBuilder(comSplit[0]).append(" ").append(uName).append(" ").append(getMessageInstaBan()).toString());
 		}else
-		if(comSplit.length == 2)
+		if(comSplit.length > 3)
 		{
 			Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), new StringBuilder(comSplit[0]).append(" ").append(uName).append(" ").append(comSplit[1]).append(getMessageInstaBan()).toString());
 		}else
-		if(comSplit.length == 3)
+		if(comSplit.length > 4)
 		{
 			Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), new StringBuilder(comSplit[0]).append(" ").append(uName).append(" ").append(comSplit[1]).append(" ").append(comSplit[2]).append(" ").append(getMessageInstaBan()).toString());
 		}
@@ -408,7 +408,7 @@ public class Mutenizer extends JavaPlugin
 			Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), new StringBuilder(comSplit[0]).append(" ").append(uName).append(" ").append(comSplit[1]).append(" ").append(getMessageCapsBan()).toString());
 		}else
 		{
-			Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), new StringBuilder(comSplit[0]).append(" ").append(uName).append(" ").append(comSplit[1]).append(" ").append(comSplit[2]).append(getMessageCapsBan()).toString());
+			Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), new StringBuilder(comSplit[0]).append(" ").append(uName).append(" ").append(comSplit[1]).append(" ").append(comSplit[2]).append(" ").append(getMessageCapsBan()).toString());
 		}
 	}
 	
@@ -436,7 +436,7 @@ public class Mutenizer extends JavaPlugin
 			Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), new StringBuilder(comSplit[0]).append(" ").append(uName).append(" ").append(comSplit[1]).append(getMessageBanned()).toString());
 		}else
 		{
-			Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), new StringBuilder(comSplit[0]).append(" ").append(uName).append(" ").append(comSplit[1]).append(" ").append(comSplit[2]).append(getMessageBanned()).toString());
+			Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), new StringBuilder(comSplit[0]).append(" ").append(uName).append(" ").append(comSplit[1]).append(" ").append(comSplit[2]).append(" ").append(getMessageBanned()).toString());
 		}
 	}
 	
